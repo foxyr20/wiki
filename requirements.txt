@@ -1,5 +1,5 @@
 fastapi
 jinja2
 uvicorn
-requests
+httpx
 markdown
