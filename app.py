@@ -4,7 +4,7 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from data_control import Constants, ENVs
+from config import Constants
 from router.overlord_api import router as overlord_api_router
 from router.wiki_render import router as wiki_router
 
@@ -12,7 +12,6 @@ from router.wiki_render import router as wiki_router
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     await Constants.req_from_over()
-    await ENVs.req_from_over()
 
     try:
         yield
