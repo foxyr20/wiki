@@ -1,7 +1,10 @@
+import logging
 from pathlib import Path
 from typing import Any
 
 import httpx
+
+log = logging.getLogger(__name__)
 
 OVERLORD_SOCKET = Path("/run/spf/overlord.sock")
 
@@ -9,13 +12,34 @@ OVERLORD_SOCKET = Path("/run/spf/overlord.sock")
 async def _fetch_json(url: str) -> dict[str, Any]:
     transport = httpx.AsyncHTTPTransport(uds=str(OVERLORD_SOCKET))
 
-    async with httpx.AsyncClient(
-        transport=transport,
-        timeout=5.0,
-    ) as client:
-        resp = await client.get(url)
-        resp.raise_for_status()
+    try:
+        async with httpx.AsyncClient(
+            transport=transport,
+            timeout=5.0,
+        ) as client:
+            resp = await client.get(url)
+
+        if resp.status_code != 200:
+            log.warning(
+                "Overlord returned %s for %s",
+                resp.status_code,
+                url,
+            )
+            return {}
+
         return resp.json()
+
+    except httpx.ConnectError:
+        log.warning("Overlord socket not available: %s", OVERLORD_SOCKET)
+        return {}
+
+    except httpx.TimeoutException:
+        log.warning("Overlord request timeout: %s", url)
+        return {}
+
+    except Exception as exc:
+        log.exception("Unexpected error while fetching %s: %s", url, exc)
+        return {}
 
 
 class Constants:
