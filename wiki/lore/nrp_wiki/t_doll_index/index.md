@@ -1,6 +1,6 @@
 Title: Индекс т-кукл
 Author: Cha1n5aww, Cain
-Date: 3 Сентября 2025 г.
+Date: 11 Января 2026 г.
 Background: images/lore/nrp_wiki/dolls/background.jpg
 
 !template[wip]

@@ -1,6 +1,6 @@
 Title: Peritya
 Author: Cha1n5aww
-Date: 2 Января 2026 г.
+Date: 11 Января 2026 г.
 Background: images/lore/nrp_wiki/t_doll_index/Peritya/backgorund.jpg
 
 # Peritya

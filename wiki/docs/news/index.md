@@ -1,5 +1,5 @@
 Title: Новости
 Author: Cain
-Date: 27 Августа 2025 г.
+Date: 11 Января 2026 г.
 
 !auto_buttons[sort=time]

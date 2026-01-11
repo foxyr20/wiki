@@ -1,5 +1,5 @@
 Title: Главная страница вики
 Author: Cain
-Date: 18 Сентября 2025 г.
+Date: 11 Января 2026 г.
 
 !auto_buttons[sort=abc]

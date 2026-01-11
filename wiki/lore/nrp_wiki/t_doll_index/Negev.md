@@ -1,13 +1,13 @@
 Title: Negev
 Author: Cha1n5aww
-Date: 2 Января 2026 г.
+Date: 11 Января 2026 г.
 Background: images/lore/nrp_wiki/t_doll_index/Negev/backgorund.jpg
 
 # Negev
 !dialog_start[
     0: left name=HK-416
 ]
-0: Боевой специалист «Негев» прибыл! Будьте готовы использовать меня с пользой!!
+0: Боевой специалист "Негев" прибыл! Будьте готовы использовать меня с пользой!!
 !dialog_end
 
 !image[

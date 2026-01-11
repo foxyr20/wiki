@@ -1,6 +1,6 @@
 Title: Инфа о СПФ
 Author: Grom
-Date: 12 Сентября 2025 г.
+Date: 11 Января 2026 г.
 Background: images/lore/nrp_wiki/organisations/SPF/background.png
 
 # ЧВК S.P.F.
