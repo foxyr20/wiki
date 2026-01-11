@@ -1,0 +1,17 @@
+.wiki-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols, 3),
+            minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.wiki-grid-cell {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.wiki-grid-step {
+    grid-column: 1 / -1;
+    height: 0;
+}

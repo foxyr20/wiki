@@ -2,100 +2,87 @@
 <html lang="ru">
 
 <head>
+    <meta charset="UTF-8">
     <title>{{ title }}</title>
 
-    <meta property="og:title" content="S.P.F. Base wiki" />
-    <meta property="og:description" content="WIKI страница {{ title }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="S.P.F. Base Wiki - {{ title }}">
+    <meta property="og:type" content="article">
 
-    <meta property="og:image" content="https://spf-base.ru/static/images/logo/site.jpg" />
-    <meta property="og:url" content="https://spf-base.ru/" />
-    <meta property="og:type" content="website" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
 
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="{{ 'css/main.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/wiki-base.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/wiki-headings.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/wiki-scroll.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/wiki-search.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/wiki-toc.css' | ver }}" />
 
-    <link rel="stylesheet" href="{{ 'css/wiki.css' | ver }}" />
-    <link rel="stylesheet" href="{{ 'css/corp-lobotomy.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-dialog.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-registry.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-card.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-small-text.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-strikethrough.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-button.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-grid.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-image.css' | ver }}" />
+    <link rel="stylesheet" href="{{ 'css/extension-restricted.css' | ver }}" />
 </head>
 
-<body>
-    <div class="page-background" style="background-image: url('{{ background_url | ver}}');">
-        <header class="site-header">
-            <a class="brand" href="/">
-                <img class="brand-logo" src="/static/images/logo/site.jpg" alt="S.P.F. Base">
-                <span class="brand-title">S.P.F. Base</span>
-            </a>
+<body {% if background_url %} style="--wiki-bg-image: url('{{ background_url | ver }}');" {% endif %}>
+    <div class="page">
 
-            <input id="nav-check" type="checkbox" class="nav-check" aria-hidden="true" />
-            <label for="nav-check" class="nav-toggle" aria-label="Открыть меню" role="button" tabindex="0">
-                <span class="nav-toggle-bar"></span>
-            </label>
+        <header class="header">
+            <div class="header-top">
+                <h1>{{ title }}</h1>
 
-            <nav class="site-nav">
-                <a href="/wiki">Wiki</a>
-                <a href="/donate">Донат</a>
-                <a href="/discord">Discord</a>
-                <a href="/profile">Панель игрока</a>
-            </nav>
-        </header>
-
-        <div class="content-tile">
-            <div class="small">
-                Последнее изменение: {{ data }}
+                <div class="wiki-search">
+                    <input type="search" placeholder="Поиск по вики..." />
+                </div>
             </div>
 
-            <main class="markdown-body">
-                {{ content|safe }}
+            <div class="meta">
+                {% if author %}
+                {% if author | length == 1 %}
+                <span>Автор: {{ author[0] }}</span>
+                {% else %}
+                <span>Авторы: {{ author | join(', ') }}</span>
+                {% endif %}
+                {% endif %}
+
+                {% if date %}
+                <span class="sep">•</span>
+                <span>Обновлено: {{ date }}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="layout">
+
+            <aside class="toc-panel">
+                <nav class="toc-nav">
+                    <a href="javascript:history.back()">← Назад</a>
+                    <span class="sep">•</span>
+                    <a href="/wiki/">На главную</a>
+                </nav>
+            </aside>
+
+            <main class="content">
+                {{ content | safe }}
             </main>
 
-            <hr>
-
-            <a href="#" class="back-button" onclick="goBack()">← Назад</a>
         </div>
+
+        <footer class="footer">
+            SPF Wiki
+        </footer>
+
     </div>
 
-    <script>
-        function highlightById(decodedId) {
-            const el = document.getElementById(decodedId);
-            if (!el) return;
-            el.classList.remove("anchor-highlight");
-            void el.offsetWidth;
-            el.classList.add("anchor-highlight");
-            setTimeout(() => el.classList.remove("anchor-highlight"), 1500);
-        }
-
-        function highlightAnchor() {
-            const rawHash = window.location.hash;
-            if (!rawHash) return;
-            const decoded = decodeURIComponent(rawHash.slice(1));
-            highlightById(decoded);
-        }
-
-        document.addEventListener("DOMContentLoaded", highlightAnchor);
-
-        window.addEventListener("hashchange", highlightAnchor);
-
-        document.querySelectorAll("a[href^='#']").forEach(anchor => {
-            anchor.addEventListener("click", (e) => {
-                const rawHref = anchor.getAttribute("href");
-                const decoded = decodeURIComponent(rawHref.slice(1));
-                setTimeout(() => highlightById(decoded), 0);
-            });
-        });
-
-        function goBack() {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = '/';
-            }
-        }
-    </script>
-
-    <script src="{{ 'js/corp-lobotomy.js' | ver }}"></script>
+    <script src="{{ 'js/wiki-scroll.js' | ver }}"></script>
+    <script src="{{ 'js/wiki-search.js' | ver }}"></script>
+    <script src="{{ 'js/wiki-toc.js' | ver }}"></script>
 </body>
 
 </html>

@@ -10,12 +10,45 @@ Date: 2 Января 2026 г.
 
 ## Контакты
 
-| Имя | Область вопросов         | Контакты | Аватар |
-|:---:|:------------------------:|:--------:|:------:|
-|Гром | Общие вопросы не <br> технического характера | Discord: `foxyr20`<br>Telegram: [Foxyr20](https://t.me/Foxyr20) | !tblimg[avatar/foxyr20_d.png|128px,auto,hard] |
-|Cain | Любые вопросы технического характера <br> (серверы, код, интеграции) | Discord: `cainheretic` | !tblimg[avatar/cain_d.png|128px,auto,hard] |
+!card
 
----
+!image[
+    images/avatar/foxyr20_d.png
+    width=128
+    align=left
+]
+
+Имя: Гром
+
+Облась вопросов:
+Общие вопросы не технического характера
+
+!image_float_break
+
+Discord: `foxyr20`
+
+Telegram: [Foxyr20](https://t.me/Foxyr20)
+
+!card_end
+
+!card
+
+!image[
+    images/avatar/cain_d.png
+    width=128
+    align=left
+]
+
+Имя: Cain
+
+Облась вопросов:
+Любые вопросы технического характера (серверы, код, интеграции)
+
+!image_float_break
+
+Discord: `cainheretic`
+
+!card_end
 
 ### Быстрые ссылки
 - [Написать Грому в Telegram](https://t.me/Foxyr20)

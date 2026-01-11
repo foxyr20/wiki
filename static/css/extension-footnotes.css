@@ -1,0 +1,42 @@
+.wiki-footnotes {
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+
+    border-top: 1px solid rgba(255, 196, 0, 0.25);
+
+    font-size: 0.85rem;
+    color: #b8b8b8;
+}
+
+.wiki-footnotes ol {
+    margin: 0;
+    padding-left: 1.4rem;
+}
+
+.wiki-footnote {
+    margin-bottom: 0.6rem;
+}
+
+.wiki-footnote p {
+    margin: 0;
+    line-height: 1.45;
+}
+
+sup.footnote-ref {
+    font-size: 0.75em;
+    vertical-align: super;
+}
+
+sup.footnote-ref a {
+    color: #ffc400;
+    text-decoration: none;
+}
+
+sup.footnote-ref a:hover {
+    text-decoration: underline;
+}
+
+sup.footnote-ref::before,
+sup.footnote-ref::after {
+    color: rgba(255, 196, 0, 0.6);
+}

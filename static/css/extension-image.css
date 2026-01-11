@@ -1,0 +1,33 @@
+.wiki-image {
+    max-width: 100%;
+}
+
+.wiki-image img {
+    max-width: var(--img-width, 100%);
+    height: auto;
+    display: block;
+}
+
+.wiki-image.align-left {
+    float: left;
+    margin: 0.2rem 1.2rem 0.6rem 0;
+}
+
+.wiki-image.align-right {
+    float: right;
+    margin: 0.2rem 0 0.6rem 1.2rem;
+}
+
+.wiki-image.align-center {
+    float: none;
+    text-align: center;
+}
+
+.wiki-image.align-center img {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wiki-image-float-break {
+    clear: both;
+}

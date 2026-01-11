@@ -5,6 +5,11 @@ from markdown.extensions import Extension
 from markdown.postprocessors import Postprocessor
 
 
+class RedactExtension(Extension):
+    def extendMarkdown(self, md: Markdown):
+        md.postprocessors.register(RedactPostprocessor(), "redact_postprocessor", 10)
+
+
 class RedactPostprocessor(Postprocessor):
     def run(self, text: str) -> str:
         def mask_content(match: re.Match) -> str:
@@ -15,8 +20,3 @@ class RedactPostprocessor(Postprocessor):
         text = pattern.sub(mask_content, text)
 
         return text.replace(r"\!redact", "!redact")
-
-
-class RedactExtension(Extension):
-    def extendMarkdown(self, md: Markdown):
-        md.postprocessors.register(RedactPostprocessor(), "redact_postprocessor", 10)

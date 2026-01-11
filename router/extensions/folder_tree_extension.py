@@ -4,6 +4,11 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 
 
+class FolderTreeExtension(Extension):
+    def extendMarkdown(self, md):
+        md.preprocessors.register(FolderTreePreprocessor(md), "foldertree", 25)
+
+
 class FolderTreePreprocessor(Preprocessor):
     RE_START = re.compile(r"^!folder\[\s*$")
     RE_END = re.compile(r"^\s*\]\s*$")
@@ -64,8 +69,3 @@ class FolderTreePreprocessor(Preprocessor):
                 i += 1
 
         return new_lines
-
-
-class FolderTreeExtension(Extension):
-    def extendMarkdown(self, md):
-        md.preprocessors.register(FolderTreePreprocessor(md), "foldertree", 25)

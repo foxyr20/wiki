@@ -1,4 +1,4 @@
-Title: НАЩ Лор
+Title: НАЩЪ Лор
 Author: Grom
 Date: 30 Декабря 2025 г.
 Background: images/lore/background_lore.jpg

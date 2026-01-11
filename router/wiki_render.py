@@ -8,22 +8,24 @@ from config import Constants
 from template_env import templates
 
 from .extensions import (
-    AutoLinkButtonsExtension,
+    AutoButtonsExtension,
     ButtonExtension,
+    CardExtension,
+    ColorExtension,
     ConstExtension,
+    DialogExtension,
     FolderTreeExtension,
-    ImgBlockExtension,
-    ImgExtension,
-    ImgUrlExtension,
-    LobotomyExtension,
+    FootnoteExtension,
+    GridExtension,
+    ImageExtension,
     RedactExtension,
+    RegistryExtension,
+    RestrictedExtension,
     SmallTextExtension,
     StrikethroughExtension,
     StripCommentsExtension,
-    TableImgExtension,
+    TemplateIncludeExtension,
     TocTreeExtension,
-    WarnIncludeExtension,
-    WikiLinkExtension,
 )
 
 router = APIRouter()
@@ -59,29 +61,33 @@ def wiki_page(request: Request, page: Path):
 
     md = Markdown(
         extensions=[
-            AutoLinkButtonsExtension(wiki_dir=WIKI_DIR),  # Динамические кнопки
+            # ---
             "fenced_code",  # Блоки кода через тройные кавычки (```), как на GitHub
             "tables",  # Markdown-таблицы
-            TableImgExtension(),  # Поддержка картинок в таблицах
             "meta",  # Заголовки-мета в начале файла (например, автор, дата)
-            TocTreeExtension(),  # Автоматическое оглавление по заголовкам
-            "admonition",  # Поддержка блоков с предупреждениями, заметками и пр.
-            "footnotes",  # Сноски
             "smarty",  # Типографические ковычки
             "nl2br",  # Превращает одиночные \n в <br />
-            WikiLinkExtension(),  # Поддержка [[url|name]] для вики-стилей
+            "tables",  # Markdown-таблицы
+            "footnotes",  # Кривые сноски
+            # ---
+            TocTreeExtension(),  # Автоматическое оглавление по заголовкам
             ConstExtension(constants=Constants.get_all_const()),  # Константы для замены
-            ImgUrlExtension(),  # Для нормальной работы ссылок
-            ImgBlockExtension(),  # Для блоков с картинками и текстом
-            RedactExtension(),  # Для обфускации информации с сайта пока не заглянут в код
-            ImgExtension(),  # Макрос для картинок
-            ButtonExtension(),  # Работа с кнопками и их оформлением
-            StripCommentsExtension(),  # В пизду комментарии, так же стрипает весь текст
-            FolderTreeExtension(),  # Для создания красивых деревьев
+            StripCommentsExtension(),  # Очистка комментариев
+            FolderTreeExtension(),  # Красивое оформление путей и папок
+            TemplateIncludeExtension(),  # Вставка однотипных блоков из _template
+            DialogExtension(),  # Обработка диалогов
+            RedactExtension(),  # Позволяет динамически отредачить и засекретить информацию
+            RegistryExtension(),  # Расширение для особых типов таблиц
+            CardExtension(),  # Позволяет билдить карточки
+            ColorExtension(),  # Красить текст в разный цвет
             SmallTextExtension(),  # Маленький текст
-            StrikethroughExtension(),  # Зачёркнутый текст
-            LobotomyExtension(),  # Немного красоты в вики
-            WarnIncludeExtension(),  # Подстановка теплейтов
+            StrikethroughExtension(),  # Зачёрктуный текст
+            ButtonExtension(),  # Кнопочки
+            AutoButtonsExtension(wiki_dir=WIKI_DIR),  # Автоматические кнопочки
+            GridExtension(),  # Грид лейаут
+            ImageExtension(),  # Картиночки
+            RestrictedExtension(),  # Запрещённая информация
+            FootnoteExtension(),  # Менее кривые сноски
         ],
     )
 
@@ -89,9 +95,10 @@ def wiki_page(request: Request, page: Path):
     rendered_html = md.convert(content)
     meta = getattr(md, "Meta", {})
 
-    title = meta.get("title", [None])[0] or "ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ"
-    data = meta.get("date", [None])[0] or "ЗАБЫЛИ ДАТУ УСТАНОВИТЬ"
-    background_url = meta.get("background", [None])[0] or "images/wallpaper.jpeg"
+    title = meta.get("title", ["ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ"])[0]
+    date = meta.get("date", [None])[0]
+    author = meta.get("author")
+    background_url = meta.get("background", [None])[0]
 
     return templates.TemplateResponse(
         "wiki_template.html",
@@ -99,7 +106,8 @@ def wiki_page(request: Request, page: Path):
             "request": request,
             "content": rendered_html,
             "title": title,
-            "data": data,
+            "date": date,
+            "author": author,
             "background_url": background_url,
         },
     )

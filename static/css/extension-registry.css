@@ -1,0 +1,110 @@
+:root {
+    --registry-key-width: 90px;
+}
+
+.registry-entry {
+    margin: 1.2rem 0;
+    padding: 0.9rem 1.1rem 1.1rem;
+    background: var(--panel);
+    border: 1px solid #222;
+    border-radius: 10px;
+}
+
+.registry-head {
+    display: grid;
+    grid-template-columns: var(--registry-key-width) minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: baseline;
+}
+
+.registry-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 700;
+    color: var(--border);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-desc {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-body {
+    margin-top: 0.9rem;
+    display: grid;
+    grid-template-columns: var(--registry-key-width) minmax(0, 1fr);
+    gap: 0.6rem 1.1rem;
+}
+
+.registry-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-text {
+    font-size: 0.9rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-text p,
+.registry-text ul,
+.registry-text ol,
+.registry-text li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-text ul {
+    padding-left: 1.1rem;
+    margin: 0.2rem 0;
+}
+
+.registry-text li {
+    margin: 0.15rem 0;
+}
+
+.registry-variants {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.registry-variants .variant {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: #101010;
+}
+
+.registry-variants .variant>div:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.registry-variants .variant-key {
+    font-family: ui-monospace, monospace;
+    font-weight: 700;
+    color: var(--border);
+    text-align: center;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}

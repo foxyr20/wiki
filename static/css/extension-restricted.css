@@ -1,0 +1,73 @@
+.restricted {
+    margin: 2rem 0;
+    padding: 1.3rem 1.5rem;
+
+    background: var(--panel);
+    border: 1px solid rgba(255, 152, 0, 0.35);
+    border-radius: 10px;
+
+    box-shadow:
+        0 0 0 1px rgba(255, 152, 0, 0.06),
+        0 10px 24px rgba(0, 0, 0, 0.55);
+
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+}
+
+/* HEADER */
+.restricted .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 0.9rem;
+}
+
+/* TAG */
+.restricted .tag {
+    padding: 0.25rem 0.65rem;
+
+    border: 1px solid rgba(255, 152, 0, 0.45);
+    border-radius: 999px;
+
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: var(--border);
+    background: rgba(255, 152, 0, 0.05);
+}
+
+/* STATE */
+.restricted .state {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+    color: var(--muted);
+}
+
+/* BODY */
+.restricted .body {
+    text-align: center;
+}
+
+/* TITLE */
+.restricted .title {
+    margin: 0 0 0.55rem;
+
+    font-weight: 500;
+    font-size: 0.9rem;
+
+    color: var(--text);
+}
+
+/* TEXT */
+.restricted .text {
+    margin: 0;
+
+    font-size: 0.85rem;
+    line-height: 1.45;
+
+    color: var(--muted);
+}

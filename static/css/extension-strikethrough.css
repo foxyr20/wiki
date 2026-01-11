@@ -1,0 +1,19 @@
+.content .strikethrough {
+    position: relative;
+    color: #8a8a8a;
+}
+
+.content .strikethrough::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+
+    top: 52%;
+
+    height: 2px;
+    background: #7a7a7a;
+
+    opacity: 0.9;
+    pointer-events: none;
+}

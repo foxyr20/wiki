@@ -1,0 +1,223 @@
+:root {
+    --bg: #0e0e0e;
+    --panel: #141414;
+    --border: #ff9800;
+    --text: #e8e8e8;
+    --muted: #9a9a9a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.7;
+
+    background:
+        linear-gradient(rgba(14, 14, 14, 0.92),
+            rgba(14, 14, 14, 0.92)),
+        var(--wiki-bg-image, none),
+        var(--bg);
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+
+/* PAGE */
+.page {
+    max-width: 1200px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 1.2rem;
+}
+
+/* HEADER */
+.header {
+    margin-bottom: 2.2rem;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 600;
+}
+
+/* SEARCH */
+.wiki-search {
+    width: 360px;
+    max-width: 100%;
+}
+
+.wiki-search input {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    background: #101010;
+    border: 1px solid #1f1f1f;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.85rem;
+}
+
+.wiki-search input::placeholder {
+    color: var(--muted);
+}
+
+/* META */
+.meta {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.meta .sep {
+    opacity: 0.4;
+}
+
+/* LAYOUT */
+.layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 2.5rem;
+}
+
+/* TOC NAV (top part of sidebar) */
+.toc-panel {
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+}
+
+.toc-nav {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.toc-nav a {
+    color: var(--border);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.toc-nav a:hover {
+    text-decoration: underline;
+}
+
+.toc-nav .sep {
+    opacity: 0.4;
+}
+
+/* CONTENT */
+.content {
+    font-size: 0.96rem;
+}
+
+.content p {
+    margin: 0.9rem 0;
+    color: #e2e2e2;
+}
+
+/* INLINE CODE */
+.content code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    padding: 0.12rem 0.35rem;
+    font-size: 0.85em;
+}
+
+/* CODE BLOCK */
+pre {
+    margin: 1.6rem 0;
+    padding: 1rem 1.2rem;
+    background: #101010;
+    border-left: 2px solid var(--border);
+    overflow-x: auto;
+    font-size: 0.85rem;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    margin: 1.8rem 0;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+th,
+td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid #222;
+}
+
+th {
+    color: #ffb74d;
+    text-align: left;
+}
+
+/* LINKS */
+.content a {
+    color: var(--border);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 152, 0, 0.35);
+    transition:
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.content a:hover,
+.content a:focus {
+    color: #ffb74d;
+    border-bottom-color: #ffb74d;
+}
+
+/* TEX */
+.missing {
+    color: #ff0000;
+    font-weight: 500;
+    font-family: ui-monospace, monospace;
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 4rem;
+    padding-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-top: 1px solid #222;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+
+    .wiki-search {
+        width: 100%;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .toc-panel {
+        display: none;
+    }
+}

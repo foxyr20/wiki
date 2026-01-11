@@ -1,0 +1,135 @@
+/* TOC PANEL */
+.toc-panel {
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+
+    padding: 1rem 1.1rem;
+    background: #101010;
+    border: 1px solid #1f1f1f;
+    border-radius: 10px;
+
+    font-size: 0.85rem;
+
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) #111;
+}
+
+.toc-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.toc-panel::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.toc-panel::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 6px;
+}
+
+/* ROOT LIST */
+.toc-inner {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* LIST ITEM */
+.toc-inner li {
+    margin: 0.35rem 0;
+}
+
+/* ROW (text + arrow ONLY) */
+.toc-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    position: relative;
+}
+
+/* LINKS */
+.toc-row a,
+.toc-row a:visited {
+    color: var(--muted);
+    text-decoration: none;
+
+    flex: 1 1 auto;
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.toc-row a:hover {
+    color: var(--text);
+}
+
+/* ACTIVE */
+.toc-row a.is-active {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.toc-row a.is-active::before {
+    content: "";
+    position: absolute;
+
+    left: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 3px;
+    height: 1.2em;
+
+    background: var(--border);
+    border-radius: 2px;
+}
+
+/* TOGGLE BUTTON */
+.toc-toggle {
+    background: transparent;
+    border: 0;
+    padding: 0 0.25rem;
+
+    color: var(--muted);
+    cursor: pointer;
+
+    line-height: 1;
+    font-size: 0.95rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toc-toggle:hover {
+    color: var(--text);
+}
+
+.toc-toggle.is-open {
+    transform: rotate(90deg);
+}
+
+/* NESTED LIST */
+.toc-inner ul {
+    list-style: none;
+
+    margin: 0.25rem 0 0.25rem 0.4rem;
+    padding-left: 0.7rem;
+
+    border-left: 1px solid #222;
+}
+
+/* COLLAPSED */
+.toc-collapsed {
+    display: none;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .toc-panel {
+        display: none;
+    }
+}

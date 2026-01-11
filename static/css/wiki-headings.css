@@ -1,0 +1,50 @@
+/* WIKI HEADINGS */
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 2.2rem 0 0.8rem;
+}
+
+/* H1 - крупный раздел (редко в контенте) */
+.content h1 {
+    font-size: 1.6rem;
+}
+
+/* H2 - основной уровень */
+.content h2 {
+    font-size: 1.35rem;
+}
+
+/* H3 */
+.content h3 {
+    font-size: 1.15rem;
+}
+
+/* H4 */
+.content h4 {
+    font-size: 1.05rem;
+    color: #dcdcdc;
+}
+
+/* H5 */
+.content h5 {
+    font-size: 0.95rem;
+    color: #bfbfbf;
+}
+
+/* H6 */
+.content h6 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* убираем мусорные отступы браузера */
+.content h1:first-child {
+    margin-top: 0;
+}

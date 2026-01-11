@@ -1,0 +1,95 @@
+.dialog {
+    margin: 1.8rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.dialog-line {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    gap: 0.8rem;
+}
+
+.dialog-line.left {
+    justify-content: flex-start;
+}
+
+.dialog-line.left .dialog-avatar {
+    order: 0;
+}
+
+.dialog-line.left .dialog-bubble {
+    order: 1;
+}
+
+.dialog-line.right {
+    justify-content: flex-end;
+}
+
+.dialog-line.right .dialog-avatar {
+    order: 1;
+}
+
+.dialog-line.right .dialog-bubble {
+    order: 0;
+}
+
+.dialog-line.center {
+    justify-content: center;
+}
+
+.dialog-avatar img {
+    width: 64px;       
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    background: #111;
+    border: 1px solid #222;
+}
+
+.dialog-bubble {
+    max-width: min(72%, 640px);
+    padding: 0.65rem 0.85rem;
+
+    background: #151515;
+    border: 1px solid #242424;
+    border-radius: 12px;
+
+    line-height: 1.45;
+}
+
+.dialog-line.left .dialog-bubble {
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+}
+
+.dialog-line.right .dialog-bubble {
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.dialog-line.center .dialog-bubble {
+    max-width: 80%;
+    background: transparent;
+    border: none;
+    padding: 0.3rem 0;
+
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+}
+
+.dialog-name {
+    font-size: 0.80rem;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.02em;
+}
+
+.dialog-text {
+    color: var(--text);
+    white-space: pre-wrap;
+}

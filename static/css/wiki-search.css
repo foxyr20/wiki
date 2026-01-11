@@ -1,0 +1,75 @@
+/* SEARCH */
+.wiki-search {
+    position: relative;
+}
+
+/* RESULTS DROPDOWN */
+.wiki-search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+
+    background: var(--panel);
+    border: 1px solid #1f1f1f;
+    border-radius: 8px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+
+    max-height: 300px;
+    overflow-y: auto;
+
+    font-size: 0.85rem;
+}
+
+/* ITEM */
+.wiki-search-item {
+    padding: 0.55rem 0.7rem;
+    cursor: pointer;
+}
+
+.wiki-search-item + .wiki-search-item {
+    border-top: 1px solid #1f1f1f;
+}
+
+.wiki-search-item:hover {
+    background: rgba(255, 152, 0, 0.06);
+}
+
+/* TITLE */
+.wiki-search-title {
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+/* PATH */
+.wiki-search-path {
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+/* SNIPPET */
+.wiki-search-snippet {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #cfcfcf;
+    line-height: 1.45;
+}
+
+/* HIGHLIGHT */
+.wiki-search-highlight {
+    color: var(--border);
+    font-weight: 500;
+}
+
+/* KIND LABEL */
+.wiki-search-kind {
+    margin-top: 0.15rem;
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}

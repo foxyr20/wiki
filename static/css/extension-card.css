@@ -1,0 +1,71 @@
+.content .card {
+    --card-accent: var(--border);
+
+    position: relative;
+    margin: 1rem 0;
+    padding: 1.4rem 1.6rem 1.5rem;
+
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid #1f1f1f;
+    border-radius: 10px;
+}
+
+.content .card::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.content .card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    bottom: 1rem;
+    width: 3px;
+    background: var(--card-accent);
+    opacity: 0.65;
+    border-radius: 3px;
+}
+
+.content .card > h1,
+.content .card > h2,
+.content .card > h3,
+.content .card > h4,
+.content .card > h5,
+.content .card > h6 {
+    margin: 0 0 0.8rem;
+    padding: 0;
+
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.content .card > h1 { font-size: 1.35rem; }
+.content .card > h2 { font-size: 1.15rem; }
+.content .card > h3 { font-size: 1.05rem; }
+.content .card > h4 { font-size: 0.95rem; }
+.content .card > h5,
+.content .card > h6 {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.content .card p {
+    margin: 0.7rem 0;
+}
+
+.content .card ul,
+.content .card ol {
+    margin: 0.7rem 0 0.7rem 1.2rem;
+}
+
+.content .card pre {
+    margin: 1.1rem 0;
+    background: #0f0f0f;
+    border-left: 2px solid var(--card-accent);
+}
+
+.content .card + .card {
+    margin-top: 3rem;
+}

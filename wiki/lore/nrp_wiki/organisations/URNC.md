@@ -4,7 +4,10 @@ Date: 2 Января 2026 г.
 
 # Union of Rossartrist Nations Coalition
 
-!img[lore/nrp_wiki/organisations/URNC/URNC_Logo.png | 50%]
+!image[
+    images/lore/nrp_wiki/organisations/URNC/URNC_Logo.png | 50%
+    align=center
+]
 
 Союз наций Россартриста (Коалиция союзов Россартистов), является союзом наций, сформированного под влиянием прометанских русских художников в 2064 году после Третьей мировой войны
 
@@ -20,15 +23,22 @@ CDB является высшим военным командованием URNC
 
 В 2092 году командующим Восточноевропейским театром ЦБ был генерал Василий Митрович.
 
-!imgblock[lore/nrp_wiki/organisations/URNC/URNC_military.png|left]
+
 Справа налево: эмблемы Вооруженных сил URNC, армии URNC, ВМС URNC и ВВС URNC
-!endimgblock
+
+!image[
+    images/lore/nrp_wiki/organisations/URNC/URNC_military.png
+    align=center
+]
 
 Тактические куклы сформировали главную фронтовую пехоту URNC. Полевые командиры куклы, оснащенные передовыми командными модулями, могли принимать гибкие решения, оставаясь при этом под властью человека на командном фронте. Они, по-видимому, были развернуты только на фронтах активных боевых действий, так как оборонительные гарнизоны во время операций были полностью укомплектованы людьми.
 
 ### Команда Коммандос-оборотни
 
-!img[lore/nrp_wiki/organisations/URNC/URNC_Werewolves.png | 50%]
+!image[
+    images/lore/nrp_wiki/organisations/URNC/URNC_Werewolves.png | 50%
+    align=center
+]
 
 Первоначально созданная как группа быстрого реагирования для обработки инцидентов, вызванных новым биооружием, Оборотни отличились во время инцидента с Варшавой в 2088 году и превратились в самую элитную боевую силу армии URNC.
 
@@ -36,21 +46,52 @@ CDB является высшим военным командованием URNC
 
 Известные обозначения Оборотней включают:
 
-!imgblock[lore/nrp_wiki/organisations/URNC/RC_URNC_Skull.png|left]
+!card
+
+!grid[3]
+
 Череп: Оснащен тяжелыми штурмовыми доспехами и винтовками SDS.
-!endimgblock
 
-!imgblock[lore/nrp_wiki/organisations/URNC/RC_URNC_Elite_Skull.png|left]
+!grid_step
+
 Кошмар: Старшее звание солдат Черепа.
-!endimgblock
 
-!imgblock[lore/nrp_wiki/organisations/URNC/RC_URNC_Cyclone.png|left]
+
+!grid_step
+
 Циклон: Оснащен легкой броней для повышенной подвижности и двойных пистолетов-пулеметов PPC-86.
-!endimgblock
 
-!imgblock[lore/nrp_wiki/organisations/URNC/RC_URNC_Elite_Cyclone.png|left]
+!grid_step
+
+!image[
+    images/lore/nrp_wiki/organisations/URNC/RC_URNC_Skull.png
+]
+
+!grid_step
+
+!image[
+    images/lore/nrp_wiki/organisations/URNC/RC_URNC_Elite_Skull.png
+]
+
+!grid_step
+
+!image[
+    images/lore/nrp_wiki/organisations/URNC/RC_URNC_Cyclone.png
+]
+
+!grid_step[2]
+
 Гром: старший ранг солдат циклона.
-!endimgblock
+
+!grid_step[3]
+
+!image[
+    images/lore/nrp_wiki/organisations/URNC/RC_URNC_Elite_Cyclone.png
+]
+
+!grid_end
+
+!card_end
 
 ### Европейское отделение реагирования на чрезвычайные ситуации URNC
 
@@ -60,4 +101,7 @@ CDB является высшим военным командованием URNC
 
 Администрация невоенных сил, или NOMFA, является агентством URNC, регулирующим негосударственные вооруженные группы, такие как частные военные компании. Калина и Крюгер вступили в эту организацию после роспуска и реорганизации ЧВК G&K в 2065 году, в том же году, когда была реструктурирована ЧВК. "Соглашение Мефисто", которое помешало куклам Грифона вступить в контакт с Командиром, произошло из NOMFA.
 
-!img[lore/nrp_wiki/organisations/URNC/NOMFA_Logo.png]
+!image[
+    images/lore/nrp_wiki/organisations/URNC/NOMFA_Logo.png
+    align=center
+]

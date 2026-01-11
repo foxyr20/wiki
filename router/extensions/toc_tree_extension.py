@@ -1,102 +1,136 @@
 import hashlib
 import re
+from xml.etree.ElementTree import Element, SubElement
 
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from markdown.treeprocessors import Treeprocessor
 
+TOC_TOKEN = "TOC_PLACEHOLDER__7d3b3f2a"
+
+
+class TocTreeExtension(Extension):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.toc_requested: bool = False
+
+    def extendMarkdown(self, md):
+        self.toc_requested = False
+
+        md.preprocessors.register(
+            TocMarkerPreprocessor(md, self),
+            "toc_marker",
+            27,
+        )
+        md.treeprocessors.register(
+            TocTreeprocessor(md, self),
+            "toc_tree",
+            15,
+        )
+
+        md.registerExtension(self)
+
 
 def slugify(text: str) -> str:
-    base = re.sub(r"[^\w\- ]+", "", text).strip().lower().replace(" ", "-")
+    base = re.sub(r"[^\w\- ]+", "", text, flags=re.UNICODE)
+    base = re.sub(r"\s+", "-", base.strip().lower())
     if not base:
         base = hashlib.md5(text.encode("utf-8")).hexdigest()[:8]
     return base
 
 
-class HeaderAnchorTreeprocessor(Treeprocessor):
-    def run(self, root):
-        for elem in root.iter():
-            if elem.tag in {f"h{i}" for i in range(1, 7)}:
-                text = "".join(elem.itertext()).strip()
-                anchor = slugify(text)
-                elem.set("id", anchor)
-
-
-class TocTreePreprocessor(Preprocessor):
+class TocMarkerPreprocessor(Preprocessor):
     RE_TOC = re.compile(r"^\s*\[TOC\]\s*$", re.IGNORECASE)
-    RE_HEADER = re.compile(r"^(#{1,6})\s+(.*)")
+
+    def __init__(self, md, ext: TocTreeExtension):
+        super().__init__(md)
+        self.ext = ext
 
     def run(self, lines: list[str]) -> list[str]:
-        headers: list[tuple[int, str, str]] = []
-        in_code_block = False
-        code_block_delim = None
+        out: list[str] = []
 
-        for line in lines:
-            m_code = re.match(r"^(```)", line)
-            if m_code:
-                delim = m_code.group(1)
-                if not in_code_block:
-                    in_code_block = True
-                    code_block_delim = delim
-                elif code_block_delim and line.startswith(code_block_delim):
-                    in_code_block = False
-                    code_block_delim = None
-                continue
-
-            if in_code_block:
-                continue
-
-            m = self.RE_HEADER.match(line)
-            if m:
-                level = len(m.group(1))
-                text = m.group(2).strip()
-                anchor = slugify(text)
-                headers.append((level, text, anchor))
-
-        def build_tree(nodes):
-            root: list[dict] = []
-            stack = [(0, root)]
-            for level, text, anchor in nodes:
-                node = {"text": text, "anchor": anchor, "children": []}
-                while stack and level <= stack[-1][0]:
-                    stack.pop()
-                stack[-1][1].append(node)
-                stack.append((level, node["children"]))
-            return root
-
-        def render_ascii(nodes, prefix=""):
-            out: list[str] = []
-            for idx, node in enumerate(nodes):
-                last = idx == len(nodes) - 1
-                connector = "└── " if last else "├── "
-                line = (
-                    f'{prefix}{connector}<a href="#{node["anchor"]}">{node["text"]}</a>'
-                )
-                out.append(line)
-                ext = "    " if last else "│   "
-                out.extend(render_ascii(node["children"], prefix + ext))
-            return out
-
-        tree = build_tree(headers)
-        tree_lines = render_ascii(tree)
-
-        new_lines: list[str] = []
         for line in lines:
             if self.RE_TOC.match(line):
-                new_lines.append('<div class="foldertree">')
-                new_lines.append('<div class="toc-title">Оглавление</div>')
-                new_lines.append("<pre>")
-                new_lines.extend(tree_lines)
-                new_lines.append("</pre>")
-                new_lines.append("</div>")
+                self.ext.toc_requested = True
+                out.append(TOC_TOKEN)
             else:
-                new_lines.append(line)
+                out.append(line)
 
-        return new_lines
+        return out
 
 
-class TocTreeExtension(Extension):
-    def extendMarkdown(self, md):
-        md.treeprocessors.register(HeaderAnchorTreeprocessor(md), "header_anchor", 15)
-        md.preprocessors.register(TocTreePreprocessor(md), "toc_tree", 27)
-        md.registerExtension(self)
+class TocTreeprocessor(Treeprocessor):
+    def __init__(self, md, ext: TocTreeExtension):
+        super().__init__(md)
+        self.ext = ext
+
+    def run(self, root):
+        if not self.ext.toc_requested:
+            self._remove_token(root)
+            return
+
+        headers: list[tuple[int, str, str]] = []
+
+        for el in root.iter():
+            if el.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+                text = "".join(el.itertext()).strip()
+                if not text:
+                    continue
+
+                level = int(el.tag[1])
+
+                anchor = el.get("id")
+                if not anchor:
+                    anchor = slugify(text)
+                    el.set("id", anchor)
+
+                headers.append((level, text, anchor))
+
+        if not headers:
+            self._remove_token(root)
+            return
+
+        toc_root = Element("div", {"class": "toc"})
+        ul_root = SubElement(toc_root, "ul")
+
+        stack: list[tuple[int, Element]] = [(0, ul_root)]
+
+        for level, text, anchor in headers:
+            while stack and level <= stack[-1][0]:
+                stack.pop()
+
+            parent_ul = stack[-1][1]
+
+            li = SubElement(parent_ul, "li")
+            a = SubElement(li, "a", {"href": f"#{anchor}"})
+            a.text = text
+
+            child_ul = SubElement(li, "ul")
+            stack.append((level, child_ul))
+
+        for li in list(toc_root.iter("li")):
+            ul = li.find("ul")
+            if ul is not None and len(ul) == 0:
+                li.remove(ul)
+
+        if not self._replace_token(root, toc_root):
+            root.insert(0, toc_root)
+
+    def _replace_token(self, root, new_el: Element) -> bool:
+        for parent in root.iter():
+            for i, child in enumerate(list(parent)):
+                if self._contains_token(child):
+                    parent.remove(child)
+                    parent.insert(i, new_el)
+                    return True
+        return False
+
+    def _remove_token(self, root) -> None:
+        for parent in root.iter():
+            for child in list(parent):
+                if self._contains_token(child):
+                    parent.remove(child)
+
+    @staticmethod
+    def _contains_token(el) -> bool:
+        return TOC_TOKEN in "".join(el.itertext())

@@ -12,7 +12,14 @@ from zoneinfo import ZoneInfo
 META_LINE = re.compile(r"^[A-Za-z][A-Za-z \-]*:\s?.*$")
 HEADING_LINE = re.compile(r"^(#{1,6})\s*(.+?)\s*$")
 
-META_ORDER = ["Title", "Author", "Date", "Background"]
+META_ORDER = [
+    "Title",
+    "Author",
+    "Date",
+    "Background",
+    "ButtonImage",
+    "ButtonDesc",
+]
 
 MONTHS = {
     1: "Января",
@@ -36,8 +43,6 @@ def today_ru(tz: str = "Europe/Amsterdam") -> str:
 
 
 # region meta helpers
-
-
 def find_meta_block(lines: List[str]) -> int:
     i = 0
     while i < len(lines):
@@ -81,9 +86,9 @@ def replace_symbols_simple(s: str) -> str:
     return (
         s.replace("«", '"')
         .replace("»", '"')
-        .replace("—", "--")
         .replace("“", '"')
         .replace("”", '"')
+        .replace("—", "--")
     )
 
 
@@ -136,9 +141,8 @@ def update_date_in_items(
 
 # endregion
 
+
 # region body normalization
-
-
 def fix_headings(text: str) -> str:
     fixed = []
     prev_blank = True
@@ -212,9 +216,8 @@ def replace_symbols_in_body(text: str) -> str:
 
 # endregion
 
+
 # region changed-files discovery (force-push safe)
-
-
 def _matches_wiki_md(path: str) -> bool:
     return fnmatch(path, "wiki/**/*.md") or fnmatch(path, "wiki/*.md")
 
@@ -288,6 +291,7 @@ def from_git_diff_fallback() -> List[Path]:
             candidates = [x.strip() for x in out.splitlines() if x.strip()]
             if candidates:
                 break
+
         except Exception:
             continue
 
@@ -308,9 +312,8 @@ def discover_changed_files() -> List[Path]:
 
 # endregion
 
+
 # region orchestrator per-file
-
-
 def process_markdown(text: str, new_date: str) -> str:
     lines = text.splitlines()
     meta_end = find_meta_block(lines)

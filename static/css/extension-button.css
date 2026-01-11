@@ -1,0 +1,78 @@
+.content .wiki-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+
+    margin: 1rem 0;
+    padding: 0.85rem 1rem 0.9rem;
+
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid #1f1f1f;
+    border-radius: 10px;
+
+    color: var(--text);
+    text-decoration: none;
+
+    transition:
+        transform 0.12s ease,
+        border-color 0.12s ease,
+        background 0.12s ease;
+}
+
+.content .wiki-button::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+
+    background: var(--border);
+    opacity: 0.75;
+    border-radius: 3px;
+}
+
+.content .wiki-button:hover {
+    border-color: rgba(255, 152, 0, 0.35);
+    background: rgba(22, 22, 22, 0.9);
+    transform: translateY(-1px);
+}
+
+.wiki-button-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+    background: #101010;
+    border: 1px solid #222;
+
+    display: grid;
+    place-items: center;
+}
+
+.wiki-button-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wiki-button-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    line-height: 1.25;
+}
+
+.wiki-button-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.wiki-button-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+}
