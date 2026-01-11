@@ -4,9 +4,23 @@ on:
   push:
     branches: [ master ]
 
+  workflow_run:
+    workflows: ["Normalize wiki MD"]
+    types:
+      - completed
+
 jobs:
   deploy:
+    if: >
+      (
+        github.event_name == 'push'
+      ) || (
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'master'
+      )
     runs-on: ubuntu-latest
+
     steps:
       - name: Run deploy script on server
         uses: appleboy/ssh-action@v0.1.10
