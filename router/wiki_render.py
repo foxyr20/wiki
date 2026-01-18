@@ -97,9 +97,11 @@ def wiki_page(request: Request, page: Path):
 
     title = meta.get("title", ["ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ"])[0]
     date = meta.get("date", [None])[0]
-    author = meta.get("author", [None])[0]
-    if author:
-        author.split(",")
+    author_raw = meta.get("author", [None])[0]
+
+    author: list[str] | None = None
+    if author_raw:
+        author = [a.strip() for a in author_raw.split(",") if a.strip()]
 
     background_url = meta.get("background", [None])[0]
 
