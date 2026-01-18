@@ -26,6 +26,7 @@ from .extensions import (
     StripCommentsExtension,
     TemplateIncludeExtension,
     TocTreeExtension,
+    WikiMetaExtension,
 )
 
 router = APIRouter()
@@ -64,7 +65,6 @@ def wiki_page(request: Request, page: Path):
             # ---
             "fenced_code",  # Блоки кода через тройные кавычки (```), как на GitHub
             "tables",  # Markdown-таблицы
-            "meta",  # Заголовки-мета в начале файла (например, автор, дата)
             "smarty",  # Типографические ковычки
             "nl2br",  # Превращает одиночные \n в <br />
             "tables",  # Markdown-таблицы
@@ -88,22 +88,23 @@ def wiki_page(request: Request, page: Path):
             ImageExtension(),  # Картиночки
             RestrictedExtension(),  # Запрещённая информация
             FootnoteExtension(),  # Менее кривые сноски
+            WikiMetaExtension(),  # Заголовки-мета в начале файла (например, автор, дата)
         ],
     )
 
     setattr(md, "current_file", md_path)
     rendered_html = md.convert(content)
-    meta = getattr(md, "Meta", {})
+    meta: dict[str, str] = getattr(md, "wiki_meta", {})
 
-    title = meta.get("title", ["ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ"])[0]
-    date = meta.get("date", [None])[0]
-    author_raw = meta.get("author", [None])[0]
+    title = meta.get("title", "ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ")
+    date = meta.get("date")
 
     author: list[str] | None = None
+    author_raw = meta.get("author")
     if author_raw:
         author = [a.strip() for a in author_raw.split(",") if a.strip()]
 
-    background_url = meta.get("background", [None])[0]
+    background_url = meta.get("background")
 
     return templates.TemplateResponse(
         "wiki_template.html",

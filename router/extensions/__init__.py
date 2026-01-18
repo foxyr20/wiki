@@ -8,6 +8,7 @@ from .folder_tree_extension import FolderTreeExtension
 from .footnote_extension import FootnoteExtension
 from .grid_extension import GridExtension
 from .image_extension import ImageExtension
+from .meta_extension import WikiMetaExtension
 from .redact_extension import RedactExtension
 from .registry_extension import RegistryExtension
 from .restricted_extension import RestrictedExtension

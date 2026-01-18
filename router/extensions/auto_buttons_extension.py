@@ -22,6 +22,8 @@ RU_MONTHS = {
     "декабря": 12,
 }
 
+META_LINE_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_]*)\s*:\s*(.+)$")
+
 
 class AutoButtonsExtension(Extension):
     def __init__(self, **kwargs):
@@ -108,8 +110,8 @@ class AutoButtonsBlockProcessor(BlockProcessor):
                     "title": meta.get("title") or md_file.stem,
                     "href": self._href_from(md_file),
                     "date": self._parse_date(meta.get("date"), md_file.stat().st_mtime),
-                    "desc": self._join(meta.get("buttondesc")),
-                    "image": self._first(meta.get("buttonimage")),
+                    "desc": meta.get("buttondesc"),
+                    "image": meta.get("buttonimage"),
                 }
             )
 
@@ -125,8 +127,8 @@ class AutoButtonsBlockProcessor(BlockProcessor):
                     "title": meta.get("title") or sub.name,
                     "href": self._href_from(index),
                     "date": self._parse_date(meta.get("date"), index.stat().st_mtime),
-                    "desc": self._join(meta.get("buttondesc")),
-                    "image": self._first(meta.get("buttonimage")),
+                    "desc": meta.get("buttondesc"),
+                    "image": meta.get("buttonimage"),
                 }
             )
 
@@ -136,41 +138,37 @@ class AutoButtonsBlockProcessor(BlockProcessor):
         rel = md_path.resolve().relative_to(self.wiki_dir).with_suffix("")
         return "/wiki/" + str(rel).replace("\\", "/")
 
-    def _read_meta(self, md_path: Path) -> dict:
+    def _read_meta(self, md_path: Path) -> dict[str, str]:
         try:
-            text = md_path.read_text(encoding="utf-8")
+            lines = md_path.read_text(encoding="utf-8").splitlines()
+
         except FileNotFoundError:
             return {}
 
-        head = []
-        for line in text.splitlines():
+        meta: dict[str, str] = {}
+        in_meta = True
+
+        for line in lines:
+            if not in_meta:
+                break
+
             if not line.strip():
                 break
-            head.append(line)
 
-        md = Markdown(extensions=["meta"])
-        md.convert("\n".join(head))
+            m = META_LINE_RE.match(line)
+            if not m:
+                break
 
-        return {
-            k.lower(): (v[0] if isinstance(v, list) else v)
-            for k, v in getattr(md, "Meta", {}).items()
-        }
+            key, value = m.groups()
+            meta[key.lower()] = value.strip()
 
-    def _join(self, value):
-        if isinstance(value, list):
-            return " ".join(v.strip() for v in value if v.strip())
-        return value
+        return meta
 
-    def _first(self, value):
-        if isinstance(value, list):
-            return value[0]
-        return value
-
-    def _parse_date(self, raw, fallback_ts):
+    def _parse_date(self, raw: Optional[str], fallback_ts: float) -> datetime:
         if not raw:
             return datetime.fromtimestamp(fallback_ts)
 
-        raw = str(raw).strip()
+        raw = raw.strip()
 
         for fmt in ("%Y-%m-%d", "%d.%m.%Y"):
             try:
@@ -186,7 +184,6 @@ class AutoButtonsBlockProcessor(BlockProcessor):
                     RU_MONTHS[parts[1].lower()],
                     int(parts[0]),
                 )
-
             except Exception:
                 pass
 
