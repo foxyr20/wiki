@@ -48,4 +48,4 @@ class Constants:
 
     @classmethod
     def get_all_const(cls) -> dict[str, str]:
-        return cls._data
+        return cls._data.copy()
