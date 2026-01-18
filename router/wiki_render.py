@@ -97,7 +97,10 @@ def wiki_page(request: Request, page: Path):
 
     title = meta.get("title", ["ЗАБЫЛИ НАИМЕНОВАНИЕ УСТАНОВИТЬ"])[0]
     date = meta.get("date", [None])[0]
-    author = meta.get("author")
+    author = meta.get("author", [None])[0]
+    if author:
+        author.split(",")
+
     background_url = meta.get("background", [None])[0]
 
     return templates.TemplateResponse(
