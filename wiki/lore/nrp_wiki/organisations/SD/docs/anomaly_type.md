@@ -160,7 +160,7 @@ Date: 11 Января 2026 г.
 !registry_end
 
 !registry[
-    name=03
+    name=04
     desc=Пограничные
 ]
 Описание:
