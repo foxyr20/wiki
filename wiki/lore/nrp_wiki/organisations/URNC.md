@@ -5,7 +5,7 @@ Date: 11 Января 2026 г.
 # Union of Rossartrist Nations Coalition
 
 !image[
-    images/lore/nrp_wiki/organisations/URNC/URNC_Logo.png | 50%
+    images/lore/nrp_wiki/organisations/URNC/URNC_Logo.png
     align=center
 ]
 
