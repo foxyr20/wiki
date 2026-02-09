@@ -1,6 +1,7 @@
 Title: Cyber Media
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonDesc: Кибер медиа
 
 # Cyber Media
 

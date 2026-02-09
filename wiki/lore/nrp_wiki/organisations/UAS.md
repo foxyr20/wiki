@@ -1,6 +1,7 @@
 Title: Universal Anything Services
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonDesc: Универсальные услуги на все случаи жизни
 
 # Universal Anything Services
 

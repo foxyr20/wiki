@@ -1,6 +1,7 @@
 Title: 42LAB
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonDesc: 42 Лаб
 
 # 42LAB
 

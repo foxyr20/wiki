@@ -1,6 +1,7 @@
 Title: Union of Rossartrist Nations Coalition
 Author: Grom
 Date: 9 Февраля 2026 г.
+ButtonDesc: Коалиция Россартристов
 
 # Union of Rossartrist Nations Coalition
 
