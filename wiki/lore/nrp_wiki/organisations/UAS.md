@@ -1,12 +1,13 @@
 Title: Universal Anything Services
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonImage: images/lore/nrp_wiki/organisations/UAS/logo_small.png
 ButtonDesc: Универсальные услуги на все случаи жизни
 
 # Universal Anything Services
 
 !image[
-    images/lore/nrp_wiki/organisations/UAS/UAS_Logo.png
+    images/lore/nrp_wiki/organisations/UAS/logo.png
     align=center
 ]
 

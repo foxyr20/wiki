@@ -2,12 +2,13 @@ Title: Sangvis Ferri
 Author: Grom
 Date: 11 Января 2026 г.
 Background: images/lore/nrp_wiki/organisations/SF/SF_BG.jpg
+ButtonImage: images/lore/nrp_wiki/organisations/SF/logo_small.png
 ButtonDesc: Сангвис ферри
 
 # Sangvis Ferri
 
 !image[
-    images/lore/nrp_wiki/organisations/SF/SF_Logo.png
+    images/lore/nrp_wiki/organisations/SF/logo.png
     align=center
 ]
 

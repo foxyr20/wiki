@@ -1,12 +1,13 @@
 Title: Cyber Media
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonImage: images/lore/nrp_wiki/organisations/CM/logo.png
 ButtonDesc: Кибер медиа
 
 # Cyber Media
 
 !image[
-    images/lore/nrp_wiki/organisations/CM/Cyber_Media_Logo.png
+    images/lore/nrp_wiki/organisations/CM/logo.png
     align=center
 ]
 

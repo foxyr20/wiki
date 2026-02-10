@@ -1,12 +1,13 @@
 Title: Ultilife
 Author: Grom
 Date: 11 Января 2026 г.
+ButtonImage: images/lore/nrp_wiki/organisations/Ultilife/logo_small.png
 ButtonDesc: Ултайф
 
 # Ultilife
 
 !image[
-    images/lore/nrp_wiki/organisations/Ultilife/Ultilife_Logo.png
+    images/lore/nrp_wiki/organisations/Ultilife/logo.png
     align=center
 ]
 
