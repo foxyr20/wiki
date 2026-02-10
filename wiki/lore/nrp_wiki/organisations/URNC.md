@@ -1,6 +1,6 @@
 Title: Union of Rossartrist Nations Coalition
 Author: Grom
-Date: 9 Февраля 2026 г.
+Date: 10 Февраля 2026 г.
 ButtonImage: images/lore/nrp_wiki/organisations/URNC/logo_small.png
 ButtonDesc: Коалиция Россартристов
 

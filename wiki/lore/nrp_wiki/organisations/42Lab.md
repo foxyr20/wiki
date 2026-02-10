@@ -1,6 +1,6 @@
 Title: 42LAB
 Author: Grom
-Date: 11 Января 2026 г.
+Date: 10 Февраля 2026 г.
 ButtonImage: images/lore/nrp_wiki/organisations/42Lab/logo_small.png
 ButtonDesc: 42 Лаб
 
