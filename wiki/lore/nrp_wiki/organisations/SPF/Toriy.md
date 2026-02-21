@@ -16,7 +16,7 @@ Date: 11 Января 2026 г.
 # Карточка досье
 
 !image[
-    images/lore/etc_info/Toriy.png
+    images/lore/nrp_wiki/organisations/SPF/Toriy.png
     align=left
     width=260
 ]

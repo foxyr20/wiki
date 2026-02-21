@@ -13,7 +13,7 @@ Date: 11 Января 2026 г.
 # Карточка досье
 
 !image[
-    images/lore/etc_info/Yasik.png
+    images/lore/nrp_wiki/organisations/SPF/Yasik.png
     align=left
     width=260
 ]

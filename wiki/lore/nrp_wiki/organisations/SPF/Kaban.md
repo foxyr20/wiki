@@ -13,7 +13,7 @@ Date: 11 Января 2026 г.
 # Карточка досье
 
 !image[
-    images/lore/etc_info/Kaban.png
+    images/lore/nrp_wiki/organisations/SPF/Kaban.png
     align=left
     width=260
 ]

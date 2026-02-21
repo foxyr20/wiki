@@ -118,21 +118,21 @@ ButtonDesc: S.P.F.
 ## Досье на глав ЧВК S.P.F.
 
 !button[
-    /wiki/lore/etc_info/Kaban
+    /wiki/lore/nrp_wiki/organisations/SPF/Kaban
     Кабан
 ]
 
 !button[
-    /wiki/lore/etc_info/Koshel
+    /wiki/lore/nrp_wiki/organisations/SPF/Koshel
     Кошель
 ]
 
 !button[
-    /wiki/lore/etc_info/Toriy
+    /wiki/lore/nrp_wiki/organisations/SPF/Toriy
     Торий
 ]
 
 !button[
-    /wiki/lore/etc_info/Yasik
+    /wiki/lore/nrp_wiki/organisations/SPF//Yasik
     Язык
 ]
