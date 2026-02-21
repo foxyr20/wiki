@@ -6,6 +6,8 @@ ButtonDesc: Касуга
 
 # Kasuga
 
+[TOC]
+
 !image[
     images/lore/nrp_wiki/organisations/Kasuga/logo.png
     align=center

@@ -7,6 +7,8 @@ ButtonDesc: Integrated Systems & Sustainment
 
 # Hotel Moskow
 
+[TOC]
+
 !image[
     images/lore/nrp_wiki/organisations/HM/logo.png
     align=center
