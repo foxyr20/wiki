@@ -6,6 +6,7 @@ ButtonImage: images/lore/nrp_wiki/organisations/ISS/logo_small.png
 ButtonDesc: Integrated Systems & Sustainment
 
 !template[ai_warn]
+
 !template[player_warn]
 
 # Integrated Systems & Sustainment
