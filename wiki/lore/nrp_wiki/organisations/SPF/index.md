@@ -1,6 +1,7 @@
 Title: Secure Protect Future
 Author: Grom
 Date: 21 Февраля 2026 г.
+ButtonImage: images/lore/nrp_wiki/organisations/SPF/logo_small.png
 Background: images/lore/nrp_wiki/organisations/SPF/background.png
 ButtonDesc: S.P.F.
 
