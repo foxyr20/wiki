@@ -3,7 +3,6 @@ Author: Grom
 Date: 21 Февраля 2026 г.
 Background: images/lore/nrp_wiki/organisations/SPF/background.png
 ButtonImage: images/lore/nrp_wiki/organisations/SPF/logo_small.png
-ButtonDesc: S.P.F.
 
 !template[wip]
 

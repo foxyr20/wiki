@@ -3,7 +3,6 @@ Author: saito_kurami
 Date: 21 Февраля 2026 г.
 Background: images/lore/nrp_wiki/organisations/HM/HM_BG.png
 ButtonImage: images/lore/nrp_wiki/organisations/HM/logo_small.png
-ButtonDesc: Integrated Systems & Sustainment
 
 # Hotel Moskow
 

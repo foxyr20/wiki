@@ -13,8 +13,13 @@ Date: 11 Января 2026 г.
 ]
 
 !button[
-    /wiki/lore/nrp_wiki/dolls
+    /wiki/lore/nrp_wiki/dolls_info
     Информация о куклах
+]
+
+!button[
+    /wiki/lore/nrp_wiki/dolls
+    Строение кукл
 ]
 
 !button[

@@ -1,4 +1,4 @@
-Title: Главная страница лора
+Title: Лор
 Author: Grom, Cain
 Date: 11 Января 2026 г.
 Background: images/lore/background_lore.jpg
