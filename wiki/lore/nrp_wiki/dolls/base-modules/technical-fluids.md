@@ -1,5 +1,6 @@
 Title: Технические жидкости
 Author: Cain
-Date: 11 Января 2026 г.
+Date: 23 Февраля 2026 г.
 ButtonImage: images/lore/nrp_wiki/dolls/blood.png
+
 

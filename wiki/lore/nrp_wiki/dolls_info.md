@@ -1,6 +1,6 @@
 Title: Инфа о куклах
 Author: Grom
-Date: 11 Января 2026 г.
+Date: 23 Февраля 2026 г.
 Background: images/lore/nrp_wiki/dolls/background.jpg
 
 [TOC]

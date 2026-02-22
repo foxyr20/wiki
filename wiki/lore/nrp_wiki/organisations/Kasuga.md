@@ -1,6 +1,6 @@
 Title: Kasuga
 Author: saito_kurami
-Date: 21 Февраля 2026 г.
+Date: 23 Февраля 2026 г.
 ButtonImage: images/lore/nrp_wiki/organisations/Kasuga/logo_small.png
 
 # Kasuga

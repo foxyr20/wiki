@@ -1,6 +1,6 @@
 Title: Paradeus
 Author: Grom
-Date: 10 Февраля 2026 г.
+Date: 23 Февраля 2026 г.
 Background: images/lore/nrp_wiki/organisations/Paradeus/Paradeus_BG.png
 ButtonImage: images/lore/nrp_wiki/organisations/Paradeus/logo_small.png
 

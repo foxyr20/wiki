@@ -1,6 +1,6 @@
 Title: Svarog Heavy Industries
 Author: Grom
-Date: 10 Февраля 2026 г.
+Date: 23 Февраля 2026 г.
 ButtonImage: images/lore/nrp_wiki/organisations/SHI/logo_small.png
 
 # Svarog Heavy Industries
