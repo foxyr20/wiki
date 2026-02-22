@@ -43,8 +43,17 @@ class ButtonBlockProcessor(BlockProcessor):
 
         url = data[0]
         name = data[1]
-        desc = data[2] if len(data) >= 3 else None
-        image = data[3] if len(data) >= 4 else None
+        desc = None
+        image = None
+
+        if len(data) >= 3:
+            if data[2].lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".svg")):
+                image = data[2]
+            else:
+                desc = data[2]
+
+        if len(data) >= 4:
+            image = data[3]
 
         a = etree.SubElement(parent, "a")
         a.set("class", "wiki-button")
