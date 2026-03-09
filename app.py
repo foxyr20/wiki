@@ -4,7 +4,6 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from config import Constants
 from router.overlord_api import router as overlord_api_router
 from router.wiki_index import router as wiki_index_router
 from router.wiki_render import router as wiki_render_router
@@ -15,9 +14,6 @@ LOCAL_RUN = os.getenv("FASTAPISTATIC") == "1"
 
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
-    if not LOCAL_RUN:
-        await Constants.req_from_over()
-
     if is_index_stale():
         build_index()
 
