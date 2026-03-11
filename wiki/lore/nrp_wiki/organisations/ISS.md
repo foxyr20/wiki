@@ -1,6 +1,6 @@
 Title: ISS
 Author: kotikmll, Dandelion
-Date: 21 Февраля 2026 г.
+Date: 11 Марта 2026 г.
 Background: images/lore/nrp_wiki/organisations/ISS/ISS_BG.png
 ButtonImage: images/lore/nrp_wiki/organisations/ISS/logo_small.png
 ButtonDesc: Integrated Systems & Sustainment

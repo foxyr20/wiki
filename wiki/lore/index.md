@@ -1,6 +1,6 @@
 Title: Лор
 Author: Grom, Cain
-Date: 23 Февраля 2026 г.
+Date: 11 Марта 2026 г.
 Background: images/lore/background_lore.jpg
 
 !card[#FF0000]
@@ -22,7 +22,6 @@ Background: images/lore/background_lore.jpg
 Спасибо за понимание
 
 !card_end
-
 
 # Выбор wiki
 Тут вы можете выбрать одну из двук Wiki:

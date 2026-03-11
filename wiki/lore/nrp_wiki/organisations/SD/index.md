@@ -1,6 +1,6 @@
 Title: Scarlet Dawn
 Author: Cain
-Date: 21 Февраля 2026 г.
+Date: 11 Марта 2026 г.
 ButtonImage: images/lore/nrp_wiki/organisations/SD/logo_small.png
 ButtonDesc: Алый рассвет
 
