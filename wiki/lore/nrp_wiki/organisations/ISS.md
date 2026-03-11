@@ -9,6 +9,8 @@ ButtonDesc: Integrated Systems & Sustainment
 
 !template[player_warn]
 
+!template[no_main_lore]
+
 # Integrated Systems & Sustainment
 
 [TOC]

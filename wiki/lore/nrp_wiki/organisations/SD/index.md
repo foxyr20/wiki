@@ -8,6 +8,8 @@ ButtonDesc: Алый рассвет
 
 !template[rpk_info]
 
+!template[no_main_lore]
+
 !card
 
 !image[

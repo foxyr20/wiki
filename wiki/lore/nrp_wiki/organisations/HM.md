@@ -4,6 +4,8 @@ Date: 23 Февраля 2026 г.
 Background: images/lore/nrp_wiki/organisations/HM/HM_BG.png
 ButtonImage: images/lore/nrp_wiki/organisations/HM/logo_small.png
 
+!template[no_main_lore]
+
 # Hotel Moskow
 
 [TOC]
