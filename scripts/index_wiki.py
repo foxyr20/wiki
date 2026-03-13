@@ -15,6 +15,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 INDEX_FILE = OUT_DIR / "wiki_index.json"
 META_FILE = OUT_DIR / "wiki_index.meta.json"
+INDEXER_FILE = Path(__file__).resolve()
 
 
 # Regex
@@ -22,10 +23,12 @@ WORD_RE = re.compile(r"[a-zA-Zа-яА-ЯёЁ0-9]{2,}", re.U)
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)\s*$")
 META_KV_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_]*)\s*:\s*(.+?)\s*$")
+TOC_RE = re.compile(r"^\s*\[TOC\]\s*$", re.IGNORECASE)
 
 LINK_RE = re.compile(r"\[([^\]]+)\]\([^)]+\)")
 FOOTNOTE_DEF_RE = re.compile(r"^\[\^[^\]]+\]\s*:\s*")
 FOOTNOTE_REF_RE = re.compile(r"\[\^[^\]]+\]")
+COLOR_TAG_RE = re.compile(r"\[/?color(?:=[^\]]+)?\]", re.IGNORECASE)
 
 HR_RE = re.compile(r"^\s*---+\s*$")
 DIRECTIVE_LINE_RE = re.compile(r"^\s*!(\w+)\b")
@@ -68,7 +71,10 @@ FOLDER_END_RE = re.compile(r"^\s*]\s*$")
 RESTRICTED_START_RE = re.compile(r"^\s*!restricted\[\s*$")
 RESTRICTED_END_RE = re.compile(r"^\s*!restricted_end\s*$")
 
-REDACT_INLINE_RE = re.compile(r"!redact\[(.*?)\]")
+REGISTRY_START_RE = re.compile(r"^\s*!registry\[\s*$")
+REGISTRY_END_RE = re.compile(r"^\s*!registry_end\s*$")
+
+REDACT_INLINE_RE = re.compile(r"(?<!\\)!redact\[(.+?)\]")
 
 IMAGE_START_RE = re.compile(r"^\s*!image\[\s*$")
 IMAGE_FLOAT_BREAK_RE = re.compile(r"^\s*!image_float_break\s*$")
@@ -78,6 +84,18 @@ AUTO_BUTTONS_RE = re.compile(r"^\s*!auto_buttons\b")
 
 TEMPLATE_RE = re.compile(r"^\s*!template\[")
 CLOSE_BRACKET_RE = re.compile(r"^\s*]\s*$")
+ESCAPED_CLOSE_BRACKET_RE = re.compile(r"^\s*\\]\s*$")
+TABLE_ROW_RE = re.compile(r"^\s*\|.+\|\s*$")
+TABLE_ALIGN_RE = re.compile(r"^\s*\|?[\s:\-]+\|[\s:\-|]*$")
+
+META_KEYS = {
+    "title",
+    "author",
+    "date",
+    "background",
+    "buttonimage",
+    "buttondesc",
+}
 
 
 # Helpers
@@ -138,6 +156,9 @@ def sanitize_text(text: str) -> str:
     Unified text sanitizer for search index.
     """
     text = substitute_constants(text)
+    text = COLOR_TAG_RE.sub("", text)
+    text = REDACT_INLINE_RE.sub("", text)
+    text = text.replace(r"\!redact", "!redact")
     text = strip_links(text)
     text = strip_inline_code(text)
     text = strip_footnote_refs(text)
@@ -223,17 +244,175 @@ def index_page(md_path: Path) -> dict:
 
     sections: list[Section] = []
 
-    def push_text(txt: str):
+    def push_text(
+        txt: str,
+        *,
+        kind: str = "text",
+        level: int | None = None,
+        speaker: str | None = None,
+    ) -> None:
         cleaned = sanitize_text(txt)
         if cleaned:
-            sections.append(Section(kind="text", text=cleaned))
+            sections.append(
+                Section(
+                    kind=kind,
+                    text=cleaned,
+                    level=level,
+                    speaker=speaker,
+                )
+            )
+
+    in_dialog = False
+    dialog_speakers: dict[str, str] = {}
+    in_restricted = False
+    in_fenced_code = False
 
     i = 0
     while i < len(lines):
         line = lines[i]
         s = line.strip()
 
+        if s.startswith("```"):
+            in_fenced_code = not in_fenced_code
+            i += 1
+            continue
+
+        if in_fenced_code:
+            i += 1
+            continue
+
         if not s or HR_RE.match(s):
+            i += 1
+            continue
+
+        if TOC_RE.match(s):
+            i += 1
+            continue
+
+        m_meta = META_KV_RE.match(s)
+        if m_meta and m_meta.group(1).lower() in META_KEYS:
+            i += 1
+            continue
+
+        if in_restricted:
+            if RESTRICTED_END_RE.match(s):
+                in_restricted = False
+            i += 1
+            continue
+
+        if DIALOG_START_RE.match(s):
+            in_dialog = True
+            dialog_speakers.clear()
+            i += 1
+            continue
+
+        if in_dialog:
+            if DIALOG_END_RE.match(s):
+                in_dialog = False
+                i += 1
+                continue
+
+            m_participant = DIALOG_PARTICIPANT_RE.match(line)
+            if m_participant:
+                key = m_participant.group("key").strip()
+                opts = parse_options(m_participant.group("opts") or "")
+                name = opts.get("name")
+                if name:
+                    dialog_speakers[key] = name
+                i += 1
+                continue
+
+            m_say = DIALOG_SAY_RE.match(line)
+            if m_say:
+                key = m_say.group(1).strip()
+                speaker = dialog_speakers.get(key, key)
+                push_text(m_say.group(2), kind="dialog", speaker=speaker)
+                i += 1
+                continue
+
+            m_at = DIALOG_AT_RE.match(line)
+            if m_at:
+                push_text(m_at.group(2), kind="dialog", speaker=m_at.group(1))
+                i += 1
+                continue
+
+            i += 1
+            continue
+
+        if RESTRICTED_START_RE.match(s):
+            i += 1
+            while i < len(lines):
+                cur = lines[i].strip()
+                if CLOSE_BRACKET_RE.match(cur) or ESCAPED_CLOSE_BRACKET_RE.match(cur):
+                    break
+                i += 1
+            i += 1
+            in_restricted = True
+            continue
+
+        if REGISTRY_START_RE.match(s):
+            header_lines: list[str] = []
+            self_closing = False
+            i += 1
+            while i < len(lines):
+                cur = lines[i].strip()
+                if ESCAPED_CLOSE_BRACKET_RE.match(cur):
+                    self_closing = True
+                    break
+                if CLOSE_BRACKET_RE.match(cur):
+                    break
+                header_lines.append(lines[i])
+                i += 1
+
+            attrs = parse_options(" ".join(header_lines))
+            header_text = " ".join(
+                part for part in (attrs.get("name", ""), attrs.get("desc", "")) if part
+            )
+            push_text(header_text)
+
+            i += 1
+            if not self_closing:
+                while i < len(lines) and not REGISTRY_END_RE.match(lines[i].strip()):
+                    body = lines[i].strip()
+                    if body:
+                        if body.startswith("-"):
+                            bullet = body[1:].strip()
+                            if ":" in bullet:
+                                key, value = bullet.split(":", 1)
+                                if key.strip() and value.strip():
+                                    push_text(value.strip())
+                                else:
+                                    push_text(bullet)
+                            else:
+                                push_text(bullet)
+                        elif body.endswith(":"):
+                            push_text(body[:-1])
+                        else:
+                            push_text(body)
+                    i += 1
+
+                i += 1
+            continue
+
+        if (
+            IMAGE_START_RE.match(s)
+            or BUTTON_START_RE.match(s)
+            or FOLDER_START_RE.match(s)
+        ):
+            i += 1
+            while i < len(lines):
+                cur = lines[i].strip()
+                if CLOSE_BRACKET_RE.match(cur) or ESCAPED_CLOSE_BRACKET_RE.match(cur):
+                    break
+                i += 1
+            i += 1
+            continue
+
+        if (
+            TEMPLATE_RE.match(s)
+            or AUTO_BUTTONS_RE.match(s)
+            or IMAGE_FLOAT_BREAK_RE.match(s)
+        ):
             i += 1
             continue
 
@@ -244,6 +423,47 @@ def index_page(md_path: Path) -> dict:
                 sections.append(
                     Section(kind="heading", text=txt, level=len(m_h.group(1)))
                 )
+            i += 1
+            continue
+
+        if TABLE_ROW_RE.match(s):
+            if TABLE_ALIGN_RE.match(s):
+                i += 1
+                continue
+
+            cells: list[str] = []
+            for raw_cell in s.strip("|").split("|"):
+                cell = raw_cell.strip()
+                if not cell:
+                    continue
+                if cell in {"]", r"\]"}:
+                    continue
+                if DIRECTIVE_LINE_RE.match(cell):
+                    continue
+                if cell.startswith("!") and cell.endswith("["):
+                    continue
+
+                opts = (
+                    parse_options(cell)
+                    if "=" in cell and "[" not in cell and "]" not in cell
+                    else {}
+                )
+                if opts:
+                    values = [
+                        value
+                        for value in opts.values()
+                        if value and not value.lower().startswith("images/")
+                    ]
+                    if not values:
+                        continue
+                    cell = " ".join(values)
+
+                if cell.lower().startswith("images/"):
+                    continue
+
+                cells.append(cell)
+
+            push_text(" ".join(cells))
             i += 1
             continue
 
@@ -333,6 +553,9 @@ def is_index_stale() -> bool:
         return True
 
     index_mtime = INDEX_FILE.stat().st_mtime
+    if INDEXER_FILE.stat().st_mtime > index_mtime:
+        return True
+
     for md in WIKI_DIR.rglob("*.md"):
         if not is_template_path(md) and md.stat().st_mtime > index_mtime:
             return True

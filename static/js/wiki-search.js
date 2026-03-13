@@ -52,6 +52,17 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;");
 }
 
+function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function parseQueryWords(query) {
+    return query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(w => w.length >= 2);
+}
+
 function makeAnchor(text) {
     return text
         .toLowerCase()
@@ -73,7 +84,7 @@ function makeSnippet(text, words, radius = 40) {
         let snippet = text.slice(start, end);
         snippet = escapeHtml(snippet);
 
-        const re = new RegExp(`(${w})`, "ig");
+        const re = new RegExp(`(${escapeRegExp(w)})`, "ig");
         snippet = snippet.replace(
             re,
             `<span class="wiki-search-highlight">$1</span>`
@@ -91,10 +102,7 @@ function makeSnippet(text, words, radius = 40) {
 function searchWiki(query) {
     if (!WIKI_INDEX || !query) return [];
 
-    const words = query
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(w => w.length >= 2);
+    const words = parseQueryWords(query);
 
     if (!words.length) return [];
 
@@ -130,22 +138,87 @@ function searchWiki(query) {
     return results.slice(0, 10);
 }
 
-function makeResultUrl(result) {
-    const base = `/wiki/${result.page.path}`;
-    const sections = result.page.sections || [];
-    const idx = result.sectionIndex;
+function countOccurrences(text, needle) {
+    if (!needle) return 0;
 
-    if (result.section.kind === "heading") {
-        return base + "#" + encodeURIComponent(makeAnchor(result.section.text));
+    let count = 0;
+    let pos = 0;
+    while (true) {
+        const idx = text.indexOf(needle, pos);
+        if (idx === -1) break;
+        count += 1;
+        pos = idx + needle.length;
     }
+    return count;
+}
 
-    for (let i = idx; i >= 0; i--) {
-        if (sections[i].kind === "heading") {
-            return base + "#" + encodeURIComponent(makeAnchor(sections[i].text));
+function pickFocusWord(sectionText, words) {
+    const lower = (sectionText || "").toLowerCase();
+    let bestWord = "";
+    let bestIdx = Number.MAX_SAFE_INTEGER;
+
+    for (const w of words) {
+        const idx = lower.indexOf(w);
+        if (idx !== -1 && idx < bestIdx) {
+            bestIdx = idx;
+            bestWord = w;
         }
     }
 
-    return base;
+    return bestWord || words[0] || "";
+}
+
+function computeHitOrdinal(page, sectionIndex, focusWord) {
+    if (!focusWord) return 1;
+
+    const sections = page.sections || [];
+    let total = 0;
+
+    for (let i = 0; i < sections.length; i++) {
+        const text = (sections[i].text || "").toLowerCase();
+        if (i < sectionIndex) {
+            total += countOccurrences(text, focusWord);
+            continue;
+        }
+
+        if (i === sectionIndex) {
+            const idx = text.indexOf(focusWord);
+            if (idx === -1) return Math.max(1, total + 1);
+
+            total += countOccurrences(
+                text.slice(0, idx + focusWord.length),
+                focusWord
+            );
+            return Math.max(1, total);
+        }
+    }
+
+    return Math.max(1, total + 1);
+}
+
+function makeResultUrl(result, query) {
+    const base = `/wiki/${result.page.path}`;
+    const idx = result.sectionIndex;
+    const words = parseQueryWords(query);
+    const focusWord = pickFocusWord(result.section.text, words);
+    const hitOrdinal = computeHitOrdinal(result.page, idx, focusWord);
+
+    const url = new URL(base, window.location.origin);
+    if (query) {
+        url.searchParams.set("q", query);
+    }
+    if (focusWord) {
+        url.searchParams.set("w", focusWord);
+        url.searchParams.set("hit", String(hitOrdinal));
+    }
+    url.searchParams.set("s", String(idx));
+
+    if (result.section.kind === "heading") {
+        url.hash = encodeURIComponent(makeAnchor(result.section.text));
+        return url.pathname + url.search + url.hash;
+    }
+
+    return url.pathname + url.search;
 }
 
 function clearResults(box) {
@@ -161,10 +234,7 @@ function renderResults(results, box, query) {
         return;
     }
 
-    const words = query
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(w => w.length >= 2);
+    const words = parseQueryWords(query);
 
     for (const r of results) {
         const item = document.createElement("div");
@@ -189,7 +259,7 @@ function renderResults(results, box, query) {
         snippet.className = "wiki-search-snippet";
         snippet.innerHTML = makeSnippet(r.section.text, words);
 
-        const url = makeResultUrl(r);
+        const url = makeResultUrl(r, query);
 
         item.appendChild(title);
         item.appendChild(kind);
@@ -205,6 +275,128 @@ function renderResults(results, box, query) {
     }
 
     box.style.display = "block";
+}
+
+function highlightWordsInContent(words) {
+    const container = document.querySelector(".content");
+    if (!container || !words.length) return [];
+
+    const orderedWords = [...words].sort((a, b) => b.length - a.length);
+    const rx = new RegExp(
+        `(${orderedWords.map(w => escapeRegExp(w)).join("|")})`,
+        "giu"
+    );
+
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode(node) {
+                if (!node.nodeValue || !node.nodeValue.trim()) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                const parent = node.parentElement;
+                if (!parent) return NodeFilter.FILTER_REJECT;
+                if (parent.closest(".wiki-search-results")) return NodeFilter.FILTER_REJECT;
+                if (parent.classList.contains("wiki-page-hit")) return NodeFilter.FILTER_REJECT;
+
+                const tag = parent.tagName;
+                if (
+                    tag === "SCRIPT" ||
+                    tag === "STYLE" ||
+                    tag === "NOSCRIPT" ||
+                    tag === "PRE" ||
+                    tag === "CODE" ||
+                    tag === "TEXTAREA" ||
+                    tag === "INPUT"
+                ) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+
+    const nodes = [];
+    while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+    }
+
+    const marks = [];
+
+    for (const node of nodes) {
+        const text = node.nodeValue;
+        if (!text) continue;
+
+        rx.lastIndex = 0;
+        if (!rx.test(text)) continue;
+
+        const frag = document.createDocumentFragment();
+        let lastIndex = 0;
+        rx.lastIndex = 0;
+
+        let match;
+        while ((match = rx.exec(text)) !== null) {
+            const idx = match.index;
+            if (idx > lastIndex) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex, idx)));
+            }
+
+            const span = document.createElement("span");
+            span.className = "wiki-page-hit";
+            span.dataset.word = match[0].toLowerCase();
+            span.textContent = match[0];
+            frag.appendChild(span);
+            marks.push(span);
+
+            lastIndex = idx + match[0].length;
+        }
+
+        if (lastIndex < text.length) {
+            frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+
+        node.parentNode.replaceChild(frag, node);
+    }
+
+    return marks;
+}
+
+function applySearchHighlightFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const query = (params.get("q") || "").trim();
+    if (!query) return;
+
+    const words = parseQueryWords(query);
+    if (!words.length) return;
+
+    const marks = highlightWordsInContent(words);
+    if (!marks.length) return;
+
+    const focusWord = (params.get("w") || "").toLowerCase();
+    const hit = Math.max(1, Number.parseInt(params.get("hit") || "1", 10));
+
+    let target = null;
+    if (focusWord) {
+        const scoped = marks.filter(m => (m.dataset.word || "") === focusWord);
+        if (scoped.length) {
+            target = scoped[Math.min(hit - 1, scoped.length - 1)];
+        }
+    }
+
+    if (!target) {
+        target = marks[0];
+    }
+
+    requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.add("wiki-page-hit-active");
+        setTimeout(() => {
+            target.classList.remove("wiki-page-hit-active");
+        }, 1600);
+    });
 }
 
 function initWikiSearch() {
@@ -237,6 +429,7 @@ function initWikiSearch() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    applySearchHighlightFromUrl();
     await loadWikiIndex();
     initWikiSearch();
 });

@@ -73,3 +73,15 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
+
+/* PAGE HITS */
+.wiki-page-hit {
+    background: rgba(255, 193, 7, 0.22);
+    border-radius: 3px;
+    padding: 0 0.08em;
+}
+
+.wiki-page-hit-active {
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.55);
+    transition: box-shadow 0.25s ease;
+}

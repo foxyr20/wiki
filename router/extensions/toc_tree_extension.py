@@ -6,6 +6,12 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from markdown.treeprocessors import Treeprocessor
 
+from .template_include_extension import (
+    TEMPLATE_HEADING_MARK,
+    TEMPLATE_TOC_BEGIN,
+    TEMPLATE_TOC_END,
+)
+
 TOC_TOKEN = "TOC_PLACEHOLDER__7d3b3f2a"
 
 
@@ -67,14 +73,30 @@ class TocTreeprocessor(Treeprocessor):
     def run(self, root):
         if not self.ext.toc_requested:
             self._remove_token(root)
+            self._remove_template_markers(root)
             return
 
         headers: list[tuple[int, str, str]] = []
+        in_template = False
 
         for el in root.iter():
+            element_text = "".join(el.itertext())
+            if TEMPLATE_TOC_BEGIN in element_text:
+                in_template = True
+                continue
+            if TEMPLATE_TOC_END in element_text:
+                in_template = False
+                continue
+
+            if in_template:
+                continue
+
             if el.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
-                text = "".join(el.itertext()).strip()
+                text = element_text.strip()
                 if not text:
+                    continue
+                if TEMPLATE_HEADING_MARK in text:
+                    self._strip_heading_mark(el)
                     continue
 
                 level = int(el.tag[1])
@@ -88,6 +110,7 @@ class TocTreeprocessor(Treeprocessor):
 
         if not headers:
             self._remove_token(root)
+            self._remove_template_markers(root)
             return
 
         toc_root = Element("div", {"class": "toc"})
@@ -116,6 +139,8 @@ class TocTreeprocessor(Treeprocessor):
         if not self._replace_token(root, toc_root):
             root.insert(0, toc_root)
 
+        self._remove_template_markers(root)
+
     def _replace_token(self, root, new_el: Element) -> bool:
         for parent in root.iter():
             for i, child in enumerate(list(parent)):
@@ -130,6 +155,20 @@ class TocTreeprocessor(Treeprocessor):
             for child in list(parent):
                 if self._contains_token(child):
                     parent.remove(child)
+
+    def _remove_template_markers(self, root) -> None:
+        for parent in root.iter():
+            for child in list(parent):
+                text = "".join(child.itertext())
+                if TEMPLATE_TOC_BEGIN in text or TEMPLATE_TOC_END in text:
+                    parent.remove(child)
+
+    def _strip_heading_mark(self, el) -> None:
+        for node in el.iter():
+            if node.text:
+                node.text = node.text.replace(TEMPLATE_HEADING_MARK, "")
+            if node.tail:
+                node.tail = node.tail.replace(TEMPLATE_HEADING_MARK, "")
 
     @staticmethod
     def _contains_token(el) -> bool:
