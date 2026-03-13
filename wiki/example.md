@@ -1,6 +1,6 @@
 Title: Тестовая страница вики
 Author: Cain
-Date: 11 Января 2026 г.
+Date: 13 Марта 2026 г.
 Background: images/wallpaper.jpeg
 ButtonImage: images/avatar/cain_e.png
 ButtonDesc: Это текст необходим для того чтобы в него написать всякую чушь через, запятую

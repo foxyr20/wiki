@@ -1,6 +1,6 @@
 Title: Терминология и расшифровка
 Author: vergrey, Cain
-Date: 3 Сентября 2025 г.
+Date: 13 Марта 2026 г.
 
 [TOC]
 

@@ -1,6 +1,6 @@
 Title: OTs-14
 Author: Cha1n5aww
-Date: 11 Января 2026 г.
+Date: 13 Марта 2026 г.
 Background: images/lore/nrp_wiki/t_doll_index/OTs-14/backgorund.jpg
 
 # ОЦ-14 "Гроза"

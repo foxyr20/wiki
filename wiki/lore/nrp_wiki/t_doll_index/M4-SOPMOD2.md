@@ -1,6 +1,6 @@
 Title: M4-SOPMOD II
 Author: Cha1n5aww
-Date: 11 Января 2026 г.
+Date: 13 Марта 2026 г.
 Background: images/lore/nrp_wiki/t_doll_index/M4-SOPMOD2/backgorund.jpg
 
 # M4-SOPMOD II
