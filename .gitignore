@@ -208,3 +208,6 @@ __marimo__/
 
 # index_data
 static/search/*
+
+# grammer
+grammar*.txt

@@ -89,6 +89,7 @@ def replace_symbols_simple(s: str) -> str:
         .replace("“", '"')
         .replace("”", '"')
         .replace("—", "--")
+        .replace("–", "-")
     )
 
 
