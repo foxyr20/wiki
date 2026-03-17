@@ -7,6 +7,13 @@ from markdown import Markdown
 from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
 
+from .block_utils import (
+    find_match_in_lines,
+    has_matching_line,
+    parse_prefix_blocks,
+    push_suffix_block,
+)
+
 RU_MONTHS = {
     "января": 1,
     "февраля": 2,
@@ -53,15 +60,24 @@ class AutoButtonsBlockProcessor(BlockProcessor):
         self.md = md
 
     def test(self, parent, block):
-        return bool(self.RE.match(block.strip()))
+        return has_matching_line(block, self.RE)
 
     def run(self, parent, blocks):
         block = blocks.pop(0)
-        m = self.RE.match(block.strip())
-        sort_mode = (m.group("args") or "abc").strip().lower()  # type: ignore
+        block_lines = block.splitlines()
+
+        cmd_idx, cmd_match = find_match_in_lines(block_lines, self.RE)
+
+        if cmd_idx is None or cmd_match is None:
+            return True
+
+        parse_prefix_blocks(self.parser, parent, block_lines[:cmd_idx])
+
+        sort_mode = (cmd_match.group("args") or "abc").strip().lower()
 
         current_file: Optional[Path] = getattr(self.md, "current_file", None)
         if not current_file:
+            push_suffix_block(blocks, block_lines[cmd_idx + 1 :])
             return True
 
         current_file = Path(current_file).resolve()
@@ -77,21 +93,23 @@ class AutoButtonsBlockProcessor(BlockProcessor):
         md_blocks: list[str] = []
 
         for it in items:
-            lines = [
+            item_lines = [
                 "!button[",
                 f"    {it['href']}",
                 f"    {it['title']}",
             ]
 
             if it.get("desc"):
-                lines.append(f"    {it['desc']}")
+                item_lines.append(f"    {it['desc']}")
 
             if it.get("image"):
-                lines.append(f"    {it['image']}")
+                item_lines.append(f"    {it['image']}")
 
-            lines.append("]")
+            item_lines.append("]")
 
-            md_blocks.append("\n".join(lines))
+            md_blocks.append("\n".join(item_lines))
+
+        push_suffix_block(blocks, block_lines[cmd_idx + 1 :])
 
         blocks[:0] = md_blocks
         return True
@@ -173,6 +191,7 @@ class AutoButtonsBlockProcessor(BlockProcessor):
         for fmt in ("%Y-%m-%d", "%d.%m.%Y"):
             try:
                 return datetime.strptime(raw, fmt)
+
             except ValueError:
                 pass
 
@@ -184,6 +203,7 @@ class AutoButtonsBlockProcessor(BlockProcessor):
                     RU_MONTHS[parts[1].lower()],
                     int(parts[0]),
                 )
+
             except Exception:
                 pass
 

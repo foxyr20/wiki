@@ -6,6 +6,14 @@ from markdown.extensions import Extension
 
 from template_env import static_url
 
+from .block_utils import (
+    find_end_index,
+    find_match_in_lines,
+    has_matching_line,
+    parse_prefix_blocks,
+    push_suffix_block,
+)
+
 
 class ButtonExtension(Extension):
     def extendMarkdown(self, md):
@@ -21,22 +29,51 @@ class ButtonBlockProcessor(BlockProcessor):
     END_RE = re.compile(r"^\s*\]\s*$")
 
     def test(self, parent, block):
-        lines = block.splitlines()
-        return bool(lines and self.START_RE.match(lines[0]))
+        return has_matching_line(block, self.START_RE)
 
     def run(self, parent, blocks):
         block = blocks.pop(0)
         lines = block.splitlines()
 
-        lines = lines[1:]
+        start_idx, _ = find_match_in_lines(lines, self.START_RE)
+
+        if start_idx is None:
+            return True
+
+        parse_prefix_blocks(self.parser, parent, lines[:start_idx])
 
         data: list[str] = []
+        ended = False
 
-        for line in lines:
+        for i in range(start_idx + 1, len(lines)):
+            line = lines[i]
             if self.END_RE.match(line.strip()):
+                push_suffix_block(blocks, lines[i + 1 :])
+                ended = True
                 break
+
             if line.strip():
                 data.append(line.strip())
+
+        while blocks and not ended:
+            blk = blocks.pop(0)
+            blk_lines = blk.splitlines()
+            end_idx = find_end_index(blk_lines, self.END_RE)
+
+            if end_idx is None:
+                for raw in blk_lines:
+                    if raw.strip():
+                        data.append(raw.strip())
+
+                continue
+
+            for raw in blk_lines[:end_idx]:
+                if raw.strip():
+                    data.append(raw.strip())
+
+            push_suffix_block(blocks, blk_lines[end_idx + 1 :])
+            ended = True
+            break
 
         if len(data) < 2:
             return True
@@ -49,6 +86,7 @@ class ButtonBlockProcessor(BlockProcessor):
         if len(data) >= 3:
             if data[2].lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".svg")):
                 image = data[2]
+
             else:
                 desc = data[2]
 

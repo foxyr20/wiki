@@ -4,9 +4,9 @@ from pathlib import Path
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 
-TEMPLATE_TOC_BEGIN = "__TEMPLATE_INCLUDE_BEGIN__9f2a9b__"
-TEMPLATE_TOC_END = "__TEMPLATE_INCLUDE_END__9f2a9b__"
-TEMPLATE_HEADING_MARK = "\u2063"
+ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})[ \t]+(.+?)\s*$")
+SETEXT_HEADING_RE = re.compile(r"^\s{0,3}(=+|-+)\s*$")
+FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
 
 
 class TemplateIncludeExtension(Extension):
@@ -18,14 +18,16 @@ class TemplateIncludeExtension(Extension):
 
 class TemplateIncludePreprocessor(Preprocessor):
     RE = re.compile(r"(?<!\\)!template\[(?P<name>[^\]]+)\]")
-    HEADING_RE = re.compile(r"^(\s*#{1,6}\s+)(.+)$")
 
     def run(self, lines):
-        out = []
+        out: list[str] = []
+        line_from_template: list[bool] = []
+
         for line in lines:
             m = self.RE.search(line)
             if not m:
                 out.append(line)
+                line_from_template.append(False)
                 continue
 
             name = m.group("name").strip()
@@ -33,24 +35,85 @@ class TemplateIncludePreprocessor(Preprocessor):
 
             if not template_file.exists():
                 out.append(f'<span class="missing">Template {name} not found</span>')
+                line_from_template.append(False)
                 continue
 
             try:
                 raw_content = template_file.read_text(encoding="utf-8").splitlines()
-                content: list[str] = []
                 for row in raw_content:
-                    m_heading = self.HEADING_RE.match(row)
-                    if m_heading:
-                        content.append(
-                            f"{m_heading.group(1)}{TEMPLATE_HEADING_MARK}{m_heading.group(2)}"
-                        )
-                    else:
-                        content.append(row)
-                out.append(TEMPLATE_TOC_BEGIN)
-                out.extend(content)
-                out.append(TEMPLATE_TOC_END)
+                    out.append(row)
+                    line_from_template.append(True)
 
             except Exception as e:
                 out.append(f"Error reading '{name}': {e}")
+                line_from_template.append(False)
+
+        setattr(
+            self.md,
+            "wiki_heading_sequence",
+            collect_heading_sequence(out, line_from_template),
+        )
 
         return out
+
+
+def collect_heading_sequence(
+    lines: list[str], line_from_template: list[bool]
+) -> list[tuple[str, bool]]:
+    out: list[tuple[str, bool]] = []
+    in_fence = False
+    fence_char = ""
+    fence_len = 0
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m_fence = FENCE_RE.match(line)
+        if m_fence:
+            token = m_fence.group(1)
+            marker_char = token[0]
+            marker_len = len(token)
+
+            if not in_fence:
+                in_fence = True
+                fence_char = marker_char
+                fence_len = marker_len
+            elif marker_char == fence_char and marker_len >= fence_len:
+                in_fence = False
+
+            i += 1
+            continue
+
+        if in_fence:
+            i += 1
+            continue
+
+        m_atx = ATX_HEADING_RE.match(line)
+        if m_atx:
+            heading = normalize_heading_text(m_atx.group(2))
+            if heading:
+                out.append((heading, line_from_template[i]))
+
+            i += 1
+            continue
+
+        if (
+            i + 1 < len(lines)
+            and line.strip()
+            and SETEXT_HEADING_RE.match(lines[i + 1])
+        ):
+            heading = normalize_heading_text(line)
+            if heading:
+                out.append((heading, line_from_template[i]))
+
+            i += 2
+            continue
+
+        i += 1
+
+    return out
+
+
+def normalize_heading_text(text: str) -> str:
+    text = re.sub(r"\s+#+\s*$", "", text.strip())
+    return re.sub(r"\s+", " ", text).strip()

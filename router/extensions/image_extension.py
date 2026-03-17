@@ -6,6 +6,14 @@ from markdown.extensions import Extension
 
 from template_env import static_url
 
+from .block_utils import (
+    find_end_index,
+    find_match_in_lines,
+    has_matching_line,
+    parse_prefix_blocks,
+    push_suffix_block,
+)
+
 
 class ImageExtension(Extension):
     def extendMarkdown(self, md):
@@ -27,30 +35,51 @@ class ImageBlockProcessor(BlockProcessor):
     END_RE = re.compile(r"^\s*\]\s*$")
 
     def test(self, parent, block):
-        for line in block.splitlines():
-            if line.strip():
-                return bool(self.START_RE.match(line.strip()))
-        return False
+        return has_matching_line(block, self.START_RE)
 
     def run(self, parent, blocks):
         block = blocks.pop(0)
         lines = block.splitlines()
 
-        start = None
-        for i, line in enumerate(lines):
-            if self.START_RE.match(line.strip()):
-                start = i + 1
-                break
+        start_idx, _ = find_match_in_lines(lines, self.START_RE)
 
-        if start is None:
+        if start_idx is None:
             return True
 
-        data = []
-        for line in lines[start:]:
+        parse_prefix_blocks(self.parser, parent, lines[:start_idx])
+
+        data: list[str] = []
+        ended = False
+
+        for i in range(start_idx + 1, len(lines)):
+            line = lines[i]
             if self.END_RE.match(line.strip()):
+                push_suffix_block(blocks, lines[i + 1 :])
+                ended = True
                 break
+
             if line.strip():
                 data.append(line.strip())
+
+        while blocks and not ended:
+            blk = blocks.pop(0)
+            blk_lines = blk.splitlines()
+            end_idx = find_end_index(blk_lines, self.END_RE)
+
+            if end_idx is None:
+                for raw in blk_lines:
+                    if raw.strip():
+                        data.append(raw.strip())
+
+                continue
+
+            for raw in blk_lines[:end_idx]:
+                if raw.strip():
+                    data.append(raw.strip())
+
+            push_suffix_block(blocks, blk_lines[end_idx + 1 :])
+            ended = True
+            break
 
         if not data:
             return True
@@ -79,12 +108,14 @@ class ImageBlockProcessor(BlockProcessor):
             if "=" in line:
                 k, v = line.split("=", 1)
                 out[k.strip().lower()] = v.strip()
+
         return out
 
     def _build_class(self, args):
         cls = ["wiki-image"]
         if "align" in args:
             cls.append(f"align-{args['align']}")
+
         return " ".join(cls)
 
     def _normalize_px(self, value):
@@ -95,10 +126,22 @@ class ImageFloatBreakProcessor(BlockProcessor):
     RE = re.compile(r"^\s*!image_float_break\s*$")
 
     def test(self, parent, block):
-        return bool(self.RE.match(block.strip()))
+        return has_matching_line(block, self.RE)
 
     def run(self, parent, blocks):
-        blocks.pop(0)
+        block = blocks.pop(0)
+        lines = block.splitlines()
+
+        idx, _ = find_match_in_lines(lines, self.RE)
+
+        if idx is None:
+            return True
+
+        parse_prefix_blocks(self.parser, parent, lines[:idx])
+
         div = etree.SubElement(parent, "div")
         div.set("class", "wiki-image-float-break")
+
+        push_suffix_block(blocks, lines[idx + 1 :])
+
         return True

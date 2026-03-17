@@ -6,11 +6,7 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 from markdown.treeprocessors import Treeprocessor
 
-from .template_include_extension import (
-    TEMPLATE_HEADING_MARK,
-    TEMPLATE_TOC_BEGIN,
-    TEMPLATE_TOC_END,
-)
+from .template_include_extension import normalize_heading_text
 
 TOC_TOKEN = "TOC_PLACEHOLDER__7d3b3f2a"
 
@@ -73,44 +69,39 @@ class TocTreeprocessor(Treeprocessor):
     def run(self, root):
         if not self.ext.toc_requested:
             self._remove_token(root)
-            self._remove_template_markers(root)
             return
 
         headers: list[tuple[int, str, str]] = []
-        in_template = False
+        heading_sequence: list[tuple[str, bool]] = getattr(
+            self.md, "wiki_heading_sequence", []
+        )
+        seq_idx = 0
 
         for el in root.iter():
-            element_text = "".join(el.itertext())
-            if TEMPLATE_TOC_BEGIN in element_text:
-                in_template = True
-                continue
-            if TEMPLATE_TOC_END in element_text:
-                in_template = False
+            if el.tag not in {"h1", "h2", "h3", "h4", "h5", "h6"}:
                 continue
 
-            if in_template:
+            text = "".join(el.itertext()).strip()
+            if not text:
                 continue
 
-            if el.tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
-                text = element_text.strip()
-                if not text:
-                    continue
-                if TEMPLATE_HEADING_MARK in text:
-                    self._strip_heading_mark(el)
-                    continue
+            seq_idx, is_template_heading = self._resolve_heading_origin(
+                text, heading_sequence, seq_idx
+            )
+            if is_template_heading:
+                continue
 
-                level = int(el.tag[1])
+            level = int(el.tag[1])
 
-                anchor = el.get("id")
-                if not anchor:
-                    anchor = slugify(text)
-                    el.set("id", anchor)
+            anchor = el.get("id")
+            if not anchor:
+                anchor = slugify(text)
+                el.set("id", anchor)
 
-                headers.append((level, text, anchor))
+            headers.append((level, text, anchor))
 
         if not headers:
             self._remove_token(root)
-            self._remove_template_markers(root)
             return
 
         toc_root = Element("div", {"class": "toc"})
@@ -139,8 +130,6 @@ class TocTreeprocessor(Treeprocessor):
         if not self._replace_token(root, toc_root):
             root.insert(0, toc_root)
 
-        self._remove_template_markers(root)
-
     def _replace_token(self, root, new_el: Element) -> bool:
         for parent in root.iter():
             for i, child in enumerate(list(parent)):
@@ -156,19 +145,27 @@ class TocTreeprocessor(Treeprocessor):
                 if self._contains_token(child):
                     parent.remove(child)
 
-    def _remove_template_markers(self, root) -> None:
-        for parent in root.iter():
-            for child in list(parent):
-                text = "".join(child.itertext())
-                if TEMPLATE_TOC_BEGIN in text or TEMPLATE_TOC_END in text:
-                    parent.remove(child)
+    def _resolve_heading_origin(
+        self,
+        text: str,
+        heading_sequence: list[tuple[str, bool]],
+        seq_idx: int,
+    ) -> tuple[int, bool]:
+        if not heading_sequence:
+            return seq_idx, False
 
-    def _strip_heading_mark(self, el) -> None:
-        for node in el.iter():
-            if node.text:
-                node.text = node.text.replace(TEMPLATE_HEADING_MARK, "")
-            if node.tail:
-                node.tail = node.tail.replace(TEMPLATE_HEADING_MARK, "")
+        normalized = normalize_heading_text(text)
+        if seq_idx < len(heading_sequence):
+            seq_text, is_template = heading_sequence[seq_idx]
+            if seq_text == normalized:
+                return seq_idx + 1, is_template
+
+        for i in range(seq_idx + 1, len(heading_sequence)):
+            seq_text, is_template = heading_sequence[i]
+            if seq_text == normalized:
+                return i + 1, is_template
+
+        return seq_idx, False
 
     @staticmethod
     def _contains_token(el) -> bool:
