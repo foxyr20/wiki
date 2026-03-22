@@ -351,18 +351,27 @@ def index_page(md_path: Path) -> dict:
             continue
 
         if REGISTRY_START_RE.match(s):
+            reg_start_i = i
             header_lines: list[str] = []
             self_closing = False
+            header_closed = False
             i += 1
             while i < len(lines):
                 cur = lines[i].strip()
                 if ESCAPED_CLOSE_BRACKET_RE.match(cur):
+                    header_closed = True
                     self_closing = True
                     break
                 if CLOSE_BRACKET_RE.match(cur):
+                    header_closed = True
                     break
                 header_lines.append(lines[i])
                 i += 1
+
+            if not header_closed:
+                # malformed header, do not consume following blocks
+                i = reg_start_i + 1
+                continue
 
             attrs = parse_options(" ".join(header_lines))
             header_text = " ".join(
@@ -372,7 +381,17 @@ def index_page(md_path: Path) -> dict:
 
             i += 1
             if not self_closing:
-                while i < len(lines) and not REGISTRY_END_RE.match(lines[i].strip()):
+                end_idx = i
+                while end_idx < len(lines) and not REGISTRY_END_RE.match(
+                    lines[end_idx].strip()
+                ):
+                    end_idx += 1
+
+                if end_idx >= len(lines):
+                    # malformed block, parse body as regular text without consuming tail
+                    continue
+
+                while i < end_idx:
                     body = lines[i].strip()
                     if body:
                         if body.startswith("-"):
@@ -391,7 +410,7 @@ def index_page(md_path: Path) -> dict:
                             push_text(body)
                     i += 1
 
-                i += 1
+                i = end_idx + 1
             continue
 
         if (
@@ -506,7 +525,10 @@ def index_page(md_path: Path) -> dict:
 
 # Index
 def is_template_path(path: Path) -> bool:
-    return "_template" in path.parts
+    parts = set(path.parts)
+    if "_tech" in parts:
+        return True
+    return False
 
 
 def build_index():

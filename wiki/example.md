@@ -140,7 +140,7 @@ cain: Как и аватарку
 
 !registry[
     name=10-7
-    desc="Покинул службу"
+    desc=”Покинул службу”
 ]
 
 Назначение:
@@ -393,3 +393,17 @@ cain: Как и аватарку
 Обычные[^1] сноски
 
 [^1]: обычные по меркам питона и его кода.
+
+---
+
+# Автоссылки и preview-карточки
+IOP и 16Lab, T-doll и даже iop, регистр не важен  
+В отдельных секторах действуют Sangvis Ferri и Paradeus, а куклы гражданского класса используются как сервисные doll-платформы.
+
+Обычные ручные ссылки тоже получают preview (если конечно я установил превью ссылок):
+[IOP](/wiki/lore/nrp_wiki/organisations/IOP), [16Lab](/wiki/lore/nrp_wiki/organisations/16Lab), [Sangvis Ferri](/wiki/lore/nrp_wiki/organisations/SF), [T-doll](/wiki/lore/nrp_wiki/dolls_info)
+
+`T-doll` приоритетнее `doll` (из-за длинны):
+T-doll, doll.
+
+Навести курсор на ссылку или тапни на мобильном - карточка откроется, если есть запись в словаре preview.

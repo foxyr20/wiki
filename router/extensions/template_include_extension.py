@@ -7,6 +7,7 @@ from markdown.preprocessors import Preprocessor
 ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})[ \t]+(.+?)\s*$")
 SETEXT_HEADING_RE = re.compile(r"^\s{0,3}(=+|-+)\s*$")
 FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+TEMPLATE_DIR = Path("wiki/_tech/template")
 
 
 class TemplateIncludeExtension(Extension):
@@ -31,9 +32,9 @@ class TemplateIncludePreprocessor(Preprocessor):
                 continue
 
             name = m.group("name").strip()
-            template_file = (Path("wiki/_template") / f"{name}.md").resolve()
+            template_file = self._resolve_template_path(name)
 
-            if not template_file.exists():
+            if template_file is None:
                 out.append(f'<span class="missing">Template {name} not found</span>')
                 line_from_template.append(False)
                 continue
@@ -55,6 +56,13 @@ class TemplateIncludePreprocessor(Preprocessor):
         )
 
         return out
+
+    def _resolve_template_path(self, name: str) -> Path | None:
+        filename = f"{name}.md"
+        candidate = (TEMPLATE_DIR / filename).resolve()
+        if candidate.exists():
+            return candidate
+        return None
 
 
 def collect_heading_sequence(
