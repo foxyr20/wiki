@@ -18,6 +18,7 @@ from .extensions import (
     FolderTreeExtension,
     FootnoteExtension,
     GridExtension,
+    HierarchyExtension,
     ImageExtension,
     LinkPreviewExtension,
     RedactExtension,
@@ -76,6 +77,10 @@ def wiki_page(request: Request, page: Path):
             ConstExtension(constants=Constants.get_all_const()),  # Константы для замены
             StripCommentsExtension(),  # Очистка комментариев
             FolderTreeExtension(),  # Красивое оформление путей и папок
+            HierarchyExtension(
+                branch_threshold=3,
+                max_chain_length=4,
+            ),  # Адаптивные иерархические схемы: цепочки и ветки
             TemplateIncludeExtension(),  # Вставка однотипных блоков из wiki/_tech/template
             DialogExtension(),  # Обработка диалогов
             RedactExtension(),  # Позволяет динамически отредачить и засекретить информацию

@@ -8,6 +8,7 @@ from .dialog_extension import DialogExtension
 from .folder_tree_extension import FolderTreeExtension
 from .footnote_extension import FootnoteExtension
 from .grid_extension import GridExtension
+from .hierarchy_extension import HierarchyExtension
 from .image_extension import ImageExtension
 from .link_preview_extension import LinkPreviewExtension
 from .meta_extension import WikiMetaExtension
