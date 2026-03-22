@@ -4,6 +4,8 @@ from pathlib import Path
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 
+from .strip_comments_extension import strip_html_comments
+
 ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})[ \t]+(.+?)\s*$")
 SETEXT_HEADING_RE = re.compile(r"^\s{0,3}(=+|-+)\s*$")
 FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
@@ -40,7 +42,8 @@ class TemplateIncludePreprocessor(Preprocessor):
                 continue
 
             try:
-                raw_content = template_file.read_text(encoding="utf-8").splitlines()
+                template_text = template_file.read_text(encoding="utf-8")
+                raw_content = strip_html_comments(template_text).splitlines()
                 for row in raw_content:
                     out.append(row)
                     line_from_template.append(True)
