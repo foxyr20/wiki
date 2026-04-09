@@ -11,6 +11,6 @@ async def ping_overlord():
 
 
 @router.post("/notify")
-async def notify_overlord(request: Request):
+async def notify_overlord():
     await Constants.req_from_over()
     return {"ok": True}

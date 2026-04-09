@@ -107,9 +107,9 @@ def wiki_page(request: Request, page: Path):
     background_url = meta.get("background")
 
     return templates.TemplateResponse(
+        request,
         "wiki_template.html",
         {
-            "request": request,
             "content": rendered_html,
             "title": title,
             "date": date,
