@@ -1,0 +1,115 @@
+.content a.wiki-link-preview-trigger {
+    position: relative;
+}
+
+.content a .wiki-link-preview-card {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 0.5rem);
+    transform: translateX(-50%) translateY(8px);
+
+    width: min(420px, 92vw);
+    display: block;
+    overflow: hidden;
+
+    border: 1px solid #2c2c2c;
+    border-top: 0;
+    background: #131313;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 40;
+    transition:
+        opacity 0.14s ease,
+        transform 0.14s ease,
+        visibility 0.14s ease;
+}
+
+.content a .wiki-link-preview-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 6px;
+    background: var(--border);
+}
+
+.content a .wiki-link-preview-row {
+    display: flex;
+    align-items: stretch;
+    min-height: 72px;
+}
+
+.content a .wiki-link-preview-content {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.content a.wiki-link-preview-trigger:hover .wiki-link-preview-card,
+.content a.wiki-link-preview-trigger:focus-visible .wiki-link-preview-card,
+.content a.wiki-link-preview-trigger.preview-open .wiki-link-preview-card {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.content a .wiki-link-preview-image {
+    width: var(--wiki-preview-image-width, 112px);
+    min-width: var(--wiki-preview-image-width, 112px);
+    height: var(--wiki-preview-image-height, 128px);
+    display: block;
+    object-fit: contain;
+    background: #0d0d0d;
+    border-right: 1px solid #262626;
+}
+
+.content a .wiki-link-preview-title {
+    display: block;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    font-weight: 700;
+    background: var(--border);
+    color: #111;
+}
+
+.content a .wiki-link-preview-synopsis {
+    display: block;
+    padding: 0.48rem 0.58rem 0.62rem;
+    font-size: 0.96rem;
+    line-height: 1.45;
+    color: #dedede;
+}
+
+.content a .wiki-link-preview-card.no-image .wiki-link-preview-row {
+    display: block;
+}
+
+.content a .wiki-link-preview-card.no-image .wiki-link-preview-content {
+    display: block;
+}
+
+body.wiki-preview-suppress-hover .content a.wiki-link-preview-trigger:hover .wiki-link-preview-card {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(8px);
+}
+
+@media (hover: none), (pointer: coarse) {
+    .content a.wiki-link-preview-trigger:hover .wiki-link-preview-card {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%) translateY(8px);
+    }
+
+    .content a.wiki-link-preview-trigger.preview-open .wiki-link-preview-card {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+}

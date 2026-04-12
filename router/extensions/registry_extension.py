@@ -1,7 +1,10 @@
 import re
+from typing import Any
 
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
+
+from .block_utils import find_end_index, find_match_in_lines
 
 
 class RegistryExtension(Extension):
@@ -10,23 +13,20 @@ class RegistryExtension(Extension):
 
 
 class RegistryPreprocessor(Preprocessor):
-    END_RE = re.compile(r"!registry_end")
-
-    OPTION_RE = re.compile(
-        r"""
-        (\w+)
-        =
-        (?:
-            "([^"]+)"
-            |
-            ([^\s]+)
-        )
-        """,
-        re.X,
-    )
+    START_RE = re.compile(r"^\s*!registry\[\s*$")
+    END_RE = re.compile(r"^\s*!registry_end\s*$")
+    HEADER_CLOSE_RE = re.compile(r"^(?P<escaped>\\)?]\s*$")
 
     SECTION_RE = re.compile(r"^(.+?):\s*$")
     VARIANT_RE = re.compile(r"^-\s*([^:]+):\s*(.+)$")
+    QUOTE_PAIRS = {
+        '"': '"',
+        "'": "'",
+        "«": "»",
+        "„": "“",
+        "“": "”",
+        "”": "“",
+    }
 
     def run(self, lines):
         out = []
@@ -35,32 +35,37 @@ class RegistryPreprocessor(Preprocessor):
         while i < len(lines):
             line = lines[i].strip()
 
-            if line == "!registry[":
-                header_lines = []
+            if self.START_RE.match(line):
+                start_i = i
+                header_start = start_i + 1
                 body_lines = []
-                self_closing = False
+                header_close_rel, header_close_match = find_match_in_lines(
+                    lines[header_start:],
+                    self.HEADER_CLOSE_RE,
+                )
 
-                i += 1
-                while i < len(lines):
-                    cur = lines[i].strip()
+                if header_close_rel is None:
+                    # Malformed header. Keep original text and continue safely.
+                    out.extend(lines[start_i:])
+                    break
 
-                    if cur == "]":
-                        self_closing = False
-                        break
-
-                    if cur == r"\]":
-                        self_closing = True
-                        break
-
-                    header_lines.append(lines[i])
-                    i += 1
-
-                i += 1
+                header_close_idx = header_start + header_close_rel
+                header_lines = lines[header_start:header_close_idx]
+                self_closing = bool(
+                    header_close_match and header_close_match.group("escaped")
+                )
+                i = header_close_idx + 1  # skip ] or \]
 
                 if not self_closing:
-                    while i < len(lines) and not self.END_RE.match(lines[i]):
-                        body_lines.append(lines[i])
-                        i += 1
+                    end_rel = find_end_index(lines[i:], self.END_RE)
+                    if end_rel is None:
+                        # Header-only registry block (no body, no !registry_end).
+                        out.append(self.render_registry(header_lines, []))
+                        continue
+
+                    end_idx = i + end_rel
+                    body_lines = lines[i:end_idx]
+                    i = end_idx + 1
 
                 out.append(
                     self.render_registry(
@@ -68,25 +73,48 @@ class RegistryPreprocessor(Preprocessor):
                         body_lines,
                     )
                 )
-            else:
-                out.append(lines[i])
+                continue
 
+            out.append(lines[i])
             i += 1
 
         return out
 
-    def parse_attrs(self, header_lines):
-        attrs = {}
+    def parse_attrs(self, header_lines: list[str]) -> dict[str, str]:
+        attrs: dict[str, str] = {}
 
         for raw in header_lines:
-            for k, v1, v2 in self.OPTION_RE.findall(raw):
-                attrs[k] = v1 or v2
+            line = raw.strip()
+            if not line or "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+            key = key.strip().lower()
+            if not key:
+                continue
+
+            attrs[key] = self._unquote(value.strip())
 
         return attrs
 
-    def parse_body(self, body_lines):
-        sections = []
-        current = None
+    def _unquote(self, value: str) -> str:
+        value = value.strip()
+        if len(value) < 2:
+            return value
+
+        first = value[0]
+        last = value[-1]
+        if first == last and first in {'"', "'", "«", "»", "„", "“", "”"}:
+            return value[1:-1].strip()
+
+        if first in self.QUOTE_PAIRS and self.QUOTE_PAIRS[first] == last:
+            return value[1:-1].strip()
+
+        return value
+
+    def parse_body(self, body_lines: list[str]) -> list[dict[str, Any]]:
+        sections: list[dict[str, Any]] = []
+        current: dict[str, Any] | None = None
 
         for raw in body_lines:
             line = raw.rstrip()

@@ -35,6 +35,4 @@ ButtonImage: images/lore/nrp_wiki/organisations/Paradeus/logo_small.png
 ]
 
 Иерархия (от высшего, к низшему):
-!folder[
-    в процессе
-]
+TODO:
