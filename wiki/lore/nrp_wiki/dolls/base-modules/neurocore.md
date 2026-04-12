@@ -1,6 +1,6 @@
 Title: Нейроядро
 Author: Cain
-Date: 23 Февраля 2026 г.
+Date: 12 Апреля 2026 г.
 
 [TOC]
 

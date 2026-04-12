@@ -1,6 +1,6 @@
 Title: Sangvis Ferri
 Author: Grom
-Date: 23 Февраля 2026 г.
+Date: 12 Апреля 2026 г.
 Background: images/lore/nrp_wiki/organisations/SF/SF_BG.jpg
 ButtonImage: images/lore/nrp_wiki/organisations/SF/logo_small.png
 
