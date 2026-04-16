@@ -133,6 +133,6 @@ ButtonImage: images/lore/nrp_wiki/organisations/SPF/logo_small.png
 ]
 
 !button[
-    /wiki/lore/nrp_wiki/organisations/SPF//Yasik
+    /wiki/lore/nrp_wiki/organisations/SPF/Yasik
     Язык
 ]
