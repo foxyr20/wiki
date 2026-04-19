@@ -1,4 +1,5 @@
 from .auto_buttons_extension import AutoButtonsExtension
+from .autolink_extension import AutoLinkExtension
 from .button_extension import ButtonExtension
 from .card_extension import CardExtension
 from .color_extension import ColorExtension
@@ -7,7 +8,9 @@ from .dialog_extension import DialogExtension
 from .folder_tree_extension import FolderTreeExtension
 from .footnote_extension import FootnoteExtension
 from .grid_extension import GridExtension
+from .hierarchy_extension import HierarchyExtension
 from .image_extension import ImageExtension
+from .link_preview_extension import LinkPreviewExtension
 from .meta_extension import WikiMetaExtension
 from .redact_extension import RedactExtension
 from .registry_extension import RegistryExtension

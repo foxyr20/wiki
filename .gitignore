@@ -211,3 +211,6 @@ static/search/*
 
 # grammer
 grammar*.txt
+
+# wiki dump
+dump/

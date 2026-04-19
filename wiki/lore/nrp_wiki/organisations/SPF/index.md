@@ -1,6 +1,6 @@
 Title: Secure Protect Future
 Author: Grom
-Date: 13 Марта 2026 г.
+Date: 16 Апреля 2026 г.
 Background: images/lore/nrp_wiki/organisations/SPF/background.png
 ButtonImage: images/lore/nrp_wiki/organisations/SPF/logo_small.png
 
@@ -133,6 +133,6 @@ ButtonImage: images/lore/nrp_wiki/organisations/SPF/logo_small.png
 ]
 
 !button[
-    /wiki/lore/nrp_wiki/organisations/SPF//Yasik
+    /wiki/lore/nrp_wiki/organisations/SPF/Yasik
     Язык
 ]

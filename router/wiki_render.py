@@ -9,6 +9,7 @@ from template_env import templates
 
 from .extensions import (
     AutoButtonsExtension,
+    AutoLinkExtension,
     ButtonExtension,
     CardExtension,
     ColorExtension,
@@ -17,7 +18,9 @@ from .extensions import (
     FolderTreeExtension,
     FootnoteExtension,
     GridExtension,
+    HierarchyExtension,
     ImageExtension,
+    LinkPreviewExtension,
     RedactExtension,
     RegistryExtension,
     RestrictedExtension,
@@ -74,7 +77,11 @@ def wiki_page(request: Request, page: Path):
             ConstExtension(constants=Constants.get_all_const()),  # Константы для замены
             StripCommentsExtension(),  # Очистка комментариев
             FolderTreeExtension(),  # Красивое оформление путей и папок
-            TemplateIncludeExtension(),  # Вставка однотипных блоков из _template
+            HierarchyExtension(
+                branch_threshold=3,
+                max_chain_length=4,
+            ),  # Адаптивные иерархические схемы: цепочки и ветки
+            TemplateIncludeExtension(),  # Вставка однотипных блоков из wiki/_tech/template
             DialogExtension(),  # Обработка диалогов
             RedactExtension(),  # Позволяет динамически отредачить и засекретить информацию
             RegistryExtension(),  # Расширение для особых типов таблиц
@@ -87,6 +94,8 @@ def wiki_page(request: Request, page: Path):
             GridExtension(),  # Грид лейаут
             ImageExtension(),  # Картиночки
             RestrictedExtension(),  # Запрещённая информация
+            AutoLinkExtension(autolinks_path=WIKI_DIR / "_tech" / "autolinks.md"),
+            LinkPreviewExtension(previews_path=WIKI_DIR / "_tech" / "link_previews.md"),
             FootnoteExtension(),  # Менее кривые сноски
             WikiMetaExtension(),  # Заголовки-мета в начале файла (например, автор, дата)
         ],
@@ -107,9 +116,9 @@ def wiki_page(request: Request, page: Path):
     background_url = meta.get("background")
 
     return templates.TemplateResponse(
+        request,
         "wiki_template.html",
         {
-            "request": request,
             "content": rendered_html,
             "title": title,
             "date": date,

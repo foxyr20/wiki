@@ -1,6 +1,6 @@
 Title: Инфа о куклах
 Author: Grom
-Date: 13 Марта 2026 г.
+Date: 9 Апреля 2026 г.
 Background: images/lore/nrp_wiki/dolls/background.jpg
 
 [TOC]
@@ -38,7 +38,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/T-Dolls.jpg
     align=center
 ]
-
 !card_end
 
 !card[#00FF00]
@@ -61,7 +60,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/C-Dolls.jpg
     align=center
 ]
-
 !card_end
 
 !card[#FF00FF]
@@ -84,7 +82,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/SF.jpg
     align=center
 ]
-
 !card_end
 
 !card[#FFFFFF]
@@ -106,7 +103,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/Paradeus.png
     align=center
 ]
-
 !card_end
 
 !card[#0000FF]
@@ -127,7 +123,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/OGAS.jpg
     align=center
 ]
-
 !card_end
 
 ---
@@ -135,10 +130,8 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
 # Строение
 
 !card[#FF0000]
-
 [color=#FF0000]ЭТОТ БЛОК ПОД ПЕРЕПИСЫВАНИЕМ![/color]
 Актуальная информация по строению находится на [странице с механикой кукл](/wiki/lore/nrp_wiki/dolls)
-
 !card_end
 
 ## **Есть ли у T-Dolls кровь?**
@@ -157,9 +150,7 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
 НО неоднократно была замечена кровь у некоторых кукол. Ответ этому есть следующий:
 
 !card
-
 Куклы с телами более высокого качества будут истекать "бионической кровью" при получении внешних повреждений, в то время как на телах более низкого качества видны только чистые порезы. Куклы, подобные AN-94, EM-2 и KSVK, истекают кровью на своих поврежденных иллюстрациях. Кроме того, при сильных повреждениях тела может вытекать гидравлическая жидкость, машинное масло и "тканевые жидкости".
-
 !card_end
 
 !image[
@@ -184,7 +175,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/ptsd.png
     align=center
 ]
-
 !card_end
 
 !card
@@ -197,7 +187,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/memory.jpg
     align=center
 ]
-
 !card_end
 
 !card
@@ -215,7 +204,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     0: left name=Springfield
 ]
 0: Мы не люди, но это не значит, что мы не чувствуем
-
 !dialog_end
 
 !card_end
@@ -231,7 +219,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/pain.jpg
     align=center
 ]
-
 !card_end
 
 !card
@@ -243,7 +230,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/G11.png
     align=center
 ]
-
 !card_end
 
 !card
@@ -258,7 +244,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/food.jpg
     align=center
 ]
-
 !card_end
 
 ## Строение
@@ -308,21 +293,18 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
 
 ### Первый слой
 Или же "поверхностное сознание", является состоянием осознанности по умолчанию.
-
 !card_end
 
 !card
 
 ### Второй слой
 Эквивалентен состоянию сна или глубокого транса, когда тело Т-Куклы замирает в определённой позе и перестаёт реагировать на внешние раздражители. Т-куклы переводятся на этот уровень во время технического обслуживания или при выполнении уровня радиоэлектронной борьбы (РЭБ), когда им необходимо отключить контроль над своим телом и внешними датчиками для экономии вычислительной мощности. Т-кукла обычно может входить на уровень 2 и покидать его по своему желанию, но некоторые атаки РЭБ могут оставить нейронное облако Т-куклы застрявшим на уровне 2 до ремонта.
-
 !card_end
 
 !card
 
 ### Третий слой
 Хранит базовые коды и основные данные Куклы. Он эквивалентен подсознанию Т-Куклы и доступен во время серьёзного техобслуживания, когда контроль Т-Куклы над своим телом полностью утрачен и она не может проснуться без посторонней помощи. Куклы, чьё сознание опустилось на этот уровень, склонны к галлюцинациям, похожим на сон.
-
 !card_end
 
 !image[
@@ -342,7 +324,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/neuro_cloud.jpg
     align=center
 ]
-
 !card_end
 
 !card
@@ -354,7 +335,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/Zener_Illustration.png
     align=center
 ]
-
 !card_end
 
 !card
@@ -368,7 +348,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/Dummy_Network.png
     align=center
 ]
-
 !card_end
 
 !card
@@ -380,7 +359,6 @@ Background: images/lore/nrp_wiki/dolls/background.jpg
     images/lore/nrp_wiki/dolls/90WISH_logo.png
     align=center
 ]
-
 !card_end
 
 # Command fairy (Командные феи)

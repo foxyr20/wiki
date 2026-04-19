@@ -1,6 +1,6 @@
 Title: Стандартизация кукл
 Author: Cain
-Date: 23 Февраля 2026 г.
+Date: 12 Апреля 2026 г.
 
 [TOC]
 
@@ -11,7 +11,4 @@ Date: 23 Февраля 2026 г.
 
 [^1]: Application Binary Interface - набор правил и соглашений, определяющих взаимодействие модулей и компонентов на низком уровне
 
-!button[
-    /wiki/lore/nrp_wiki/dolls/standardization/layers-consciousness
-    Слои сознания
-]
+!auto_buttons[sort=abc]

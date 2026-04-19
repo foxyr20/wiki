@@ -1,6 +1,6 @@
 Title: Классификация ур. доступа
 Author: Cain
-Date: 11 Января 2026 г.
+Date: 12 Апреля 2026 г.
 
 !template[wip]
 
@@ -36,37 +36,37 @@ Date: 11 Января 2026 г.
 !registry[
     name=SUP
     desc="Полный доступ к информации серверов"
-\]
+]
 
 !registry[
     name=ART
     desc="Доступ уровня AI"
-\]
+]
 
 !registry[
     name=SE1
     desc="Доступ 1-го ур. секретности"
-\]
+]
 
 !registry[
     name=SE2
     desc="Доступ 2-го ур. секретности"
-\]
+]
 
 !registry[
     name=SE3
     desc="Доступ 3-го ур. секретности"
-\]
+]
 
 !registry[
     name=GEN
     desc="Общий доступ работников организации"
-\]
+]
 
 !registry[
     name=PUB
     desc="Общедоступная информация за пределами организации"
-\]
+]
 
 !card_end
 
