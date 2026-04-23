@@ -1,6 +1,6 @@
 Title: Лор
 Author: Grom
-Date: 13 Марта 2026 г.
+Date: 23 Апреля 2026 г.
 Background: images/lore/background_lore.jpg
 
 [TOC]
