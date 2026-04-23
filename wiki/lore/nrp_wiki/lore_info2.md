@@ -1,4 +1,4 @@
-Title: НАЩЪ Лор
+Title: Лор
 Author: Grom
 Date: 13 Марта 2026 г.
 Background: images/lore/background_lore.jpg
